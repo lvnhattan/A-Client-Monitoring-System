@@ -1,0 +1,40 @@
+JFDML JFormDesigner: "7.0.7.0.1134" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp btnStart::::1026:x, comp lblChatServer::::1026:x, comp scrollPane::t::1026:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {comp lblChatServer:::p:28:p, space :::p, comp scrollPane:::p::p, space :p:18:p, comp btnStart:::p::p, space :p:127:p}}"
+		} ) {
+			name: "this"
+			"resizable": false
+			"title": "Server "
+			"defaultCloseOperation": 3
+			"$sizePolicy": 1
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblChatServer"
+				"text": "CHAT SERVER"
+				"font": new java.awt.Font( "Segoe UI", 0, 16 )
+				"horizontalAlignment": 0
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tablelog"
+					auxiliary() {
+						"JavaCodeGenerator.variableLocal": true
+					}
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnStart"
+				"text": "START"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnStart", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 20, 5 )
+			"size": new java.awt.Dimension( 1040, 590 )
+		} )
+	}
+}

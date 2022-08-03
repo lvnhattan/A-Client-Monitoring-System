@@ -1,0 +1,5 @@
+Xem được danh sách các Client đang kết nối 
+Ghi Log hiển thị bằng jtable: stt, thời điểm, action, ip client, diễn giải action (Bao gồm Login Logout)
+Cho phép thay đổi folder giám sát (Change folder root)
+Rename Root 
+Create, Rename, Update, Delete Thư mục tập tin con
