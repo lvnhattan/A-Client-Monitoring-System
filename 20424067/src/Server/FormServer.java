@@ -4,39 +4,35 @@
 
 package Server;
 
-import Config.*;
 import Config.User.AccountUser;
 import Config.User.Log;
 import me.alexpanov.net.FreePortFinder;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.FileHandler;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.table.AbstractTableModel;
 
 /**
  * @author nhat tan
  */
 public class FormServer extends JFrame {
-    public static SimpleDateFormat formatter = new SimpleDateFormat("[hh:mm a]");
     private static final int MAX_CONNECTED = 50;
     private static int PORT;
     public static ServerSocket server;
     private static volatile boolean exit = false;
     public static ArrayList<AccountUser> UserList = new ArrayList<>();
-    public static ArrayList<Log> Logs=new ArrayList<>();
+    public static ArrayList<Log> Logs = new ArrayList<>();
     public static HashMap<String, PrintWriter> connectedClients = new HashMap<>();
     public static AccountUser Temp;
     public JTable tablelog;
@@ -63,23 +59,23 @@ public class FormServer extends JFrame {
     }
 
     private void btnStart(ActionEvent e) {
-            if (e.getSource() == btnStart) {
-                if (btnStart.getText().equals("START")) {
-                    exit = false;
-                    getRandomPort();
-                    Log temp=new Log("Server","Start","Port "+String.valueOf(PORT),LocalDateTime.now(),"Start Server");
-                    Logs.add(temp);
-                    start();
-                    btnStart.setText("STOP");
-                } else {
-                    Log temp=new Log("Server","Stop","Port " +String.valueOf(PORT),LocalDateTime.now(),"Stop Server");
-                    Logs.add(temp);
-                    exit = true;
-                    btnStart.setText("START");
-                }
+        if (e.getSource() == btnStart) {
+            if (btnStart.getText().equals("START")) {
+                exit = false;
+                getRandomPort();
+                Log temp = new Log("Server", "Start", "Port " + String.valueOf(PORT), LocalDateTime.now(), "Start Server");
+                Logs.add(temp);
+                start();
+                btnStart.setText("STOP");
+            } else {
+                Log temp = new Log("Server", "Stop", "Port " + String.valueOf(PORT), LocalDateTime.now(), "Stop Server");
+                Logs.add(temp);
+                exit = true;
+                btnStart.setText("START");
             }
-            //Refresh UI
-            refreshUIComponents();
+        }
+        //Refresh UI
+        refreshUIComponents();
     }
 
     public void initComponents() {
@@ -113,24 +109,24 @@ public class FormServer extends JFrame {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(btnStart, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
-                        .addComponent(lblChatServer, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
-                        .addComponent(scrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE))
-                    .addContainerGap())
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(btnStart, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
+                                        .addComponent(lblChatServer, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
+                                        .addComponent(scrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addComponent(lblChatServer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(btnStart)
-                    .addGap(127, 127, 127))
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addComponent(lblChatServer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnStart)
+                                .addGap(127, 127, 127))
         );
         setSize(1040, 590);
         setLocationRelativeTo(getOwner());
@@ -143,13 +139,12 @@ public class FormServer extends JFrame {
         tablelog.setModel(model);
     }
 
-    public static class Logtable extends AbstractTableModel{
-        private final String[] columns = {"Username", "Acction", "Ipclient","Datetime","Description"};
+    public static class Logtable extends AbstractTableModel {
+        private final String[] columns = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
         private ArrayList<Log> Logs;
 
-        public Logtable (ArrayList<Log> Logs)
-        {
-            this.Logs=Logs;
+        public Logtable(ArrayList<Log> Logs) {
+            this.Logs = Logs;
         }
 
         @Override
@@ -164,7 +159,7 @@ public class FormServer extends JFrame {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return switch (columnIndex){
+            return switch (columnIndex) {
                 case 0 -> Logs.get(rowIndex).getUsername();
                 case 1 -> Logs.get(rowIndex).getAcction();
                 case 2 -> Logs.get(rowIndex).getIpclient();
@@ -181,15 +176,19 @@ public class FormServer extends JFrame {
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
-            if (getValueAt(0,columnIndex)!=null)
-            {
-                return getValueAt(0,columnIndex).getClass();
-            }
-            else {
+            if (getValueAt(0, columnIndex) != null) {
+                return getValueAt(0, columnIndex).getClass();
+            } else {
                 return Object.class;
             }
         }
+
+        @Override
+        public void fireTableDataChanged() {
+            super.fireTableDataChanged();
+        }
     }
+
     public static void start() {
         new Thread(new ServerHandler()).start();
 
@@ -197,12 +196,6 @@ public class FormServer extends JFrame {
 
     public static void stop() throws IOException {
         if (!server.isClosed()) server.close();
-    }
-
-    private static void broadcastMessage(String message) {
-        for (PrintWriter p: connectedClients.values()) {
-            p.println(message);
-        }
     }
 
     private static int getRandomPort() {
@@ -222,7 +215,7 @@ public class FormServer extends JFrame {
                     }
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),"Bug",Arrays.toString(e.getStackTrace()),JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Bug", Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -232,14 +225,21 @@ public class FormServer extends JFrame {
         private Socket socket;
         private PrintWriter out;
         private BufferedReader in;
+        public JTable tablelog;
+
         public ClientHandler(Socket socket) {
             this.socket = socket;
         }
+
+        public void refreshUIComponents() {
+            Logtable model = new Logtable(Logs);
+            tablelog.setModel(model);
+            model.fireTableDataChanged();
+        }
+
         @Override
         public void run() {
-            //addToLogs("Client connected: " + socket.getInetAddress() + socket.getPort());
-
-            String name="";
+            String name = "";
             //Xử Lí Thông tin Client
             try {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -247,21 +247,19 @@ public class FormServer extends JFrame {
                 String check;
                 while (true) {
                     check = in.readLine();
+                    System.out.print(check);
                     if (check.equals("Connect")) {
-                        var User = new AccountUser(in.readLine(),in.readLine());
+                        var User = new AccountUser(in.readLine(), in.readLine());
                         UserList.add(User);
-                        Log temp = new Log(User.getUsername(),"Login",String.valueOf(socket.getInetAddress()) + String.valueOf(socket.getPort()), LocalDateTime.now(),"Đăng nhập");
+                        Log temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now(), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
-                        System.out.print(temp);
-                        JTable tablelog=new JTable();
-                        Logtable model = new Logtable(Logs);
-                        tablelog.setModel(model);
+                        //System.out.print(Temp.getUsername() + " " + Temp.getIpclient());
+                        refreshUIComponents();
                     }
-
                 }
-            } catch (
-                    Exception e) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),"Bug",e.getMessage(),JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Bug", e.getMessage(), JOptionPane.ERROR_MESSAGE);
+                System.out.println(e.getMessage());
             } finally {
                 if (name != null) {
 //                    addToLogs(name + " is leaving");

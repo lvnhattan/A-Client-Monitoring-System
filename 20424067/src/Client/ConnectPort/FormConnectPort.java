@@ -6,6 +6,7 @@ package Client.ConnectPort;
 
 
 
+import Client.Main.FormClient;
 import Config.*;
 
 import java.awt.*;
@@ -13,6 +14,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.Normalizer;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -47,17 +50,17 @@ public class FormConnectPort extends JFrame {
     }
 
     private void btnConnectActionPerformed(ActionEvent e) {
-        // TODO add your code here
         start();
         if(isrunning)
         {
-            JOptionPane.showMessageDialog(this,"Success.");
+            JOptionPane.showMessageDialog(this,"Success."+ txtName.getText()+" "+clientSocket.getInetAddress()+" "+clientSocket.getPort());
+            FormClient client = new FormClient();
+            client.setVisible(true);
             this.setVisible(false);
+
         }
         else
-        {
             JOptionPane.showMessageDialog(this, "Fail. Please Check Your Port");
-        }
 
     }
 
@@ -67,8 +70,14 @@ public class FormConnectPort extends JFrame {
             clientSocket = new Socket("localhost", PORT);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             isrunning=true;
+
+            out.println("Connect");
+            out.println(txtName.getText());
+            out.println(clientSocket.getInetAddress()+" "+clientSocket.getPort());
+
         } catch (Exception err) {
-            out.println("[ERROR] "+err.getLocalizedMessage());
+            System.out.println("[ERROR] "+err.getLocalizedMessage());
+            //out.println("[ERROR] "+err.getLocalizedMessage());
             isrunning=false;
         }
     }
@@ -87,6 +96,8 @@ public class FormConnectPort extends JFrame {
         txtPort = new JTextField();
         lblInfo = new JLabel();
         btnConnect = new JButton();
+        lblName = new JLabel();
+        txtName = new JTextField();
 
         //======== this ========
         setTitle("Connection Port");
@@ -120,6 +131,10 @@ public class FormConnectPort extends JFrame {
         btnConnect.setText("Connect");
         btnConnect.addActionListener(e -> btnConnectActionPerformed(e));
 
+        //---- lblName ----
+        lblName.setText("Username");
+        lblName.setHorizontalAlignment(SwingConstants.CENTER);
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -131,16 +146,18 @@ public class FormConnectPort extends JFrame {
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGroup(contentPaneLayout.createParallelGroup()
                                 .addComponent(lblIP, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblPort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(lblPort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblName, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(contentPaneLayout.createParallelGroup()
                                 .addComponent(txtIp, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
-                                .addComponent(txtPort, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))))
+                                .addComponent(txtPort, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
+                                .addComponent(txtName, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))))
                     .addContainerGap())
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(165, 165, 165)
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap(170, Short.MAX_VALUE)
                     .addComponent(btnConnect, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(174, Short.MAX_VALUE))
+                    .addGap(169, 169, 169))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
@@ -155,9 +172,13 @@ public class FormConnectPort extends JFrame {
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(txtPort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblPort, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblName, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                     .addGap(18, 18, 18)
                     .addComponent(btnConnect)
-                    .addContainerGap(17, Short.MAX_VALUE))
+                    .addContainerGap(22, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -174,5 +195,7 @@ public class FormConnectPort extends JFrame {
     private JTextField txtPort;
     private JLabel lblInfo;
     private JButton btnConnect;
+    private JLabel lblName;
+    private JTextField txtName;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

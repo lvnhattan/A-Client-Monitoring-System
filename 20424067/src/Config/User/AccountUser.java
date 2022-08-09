@@ -12,4 +12,8 @@ public class AccountUser {
     public String getUsername() {
         return Username;
     }
+
+    public String getIpclient() {
+        return Ipclient;
+    }
 }

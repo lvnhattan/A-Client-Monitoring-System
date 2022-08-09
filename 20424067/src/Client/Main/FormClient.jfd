@@ -1,0 +1,23 @@
+JFDML JFormDesigner: "7.0.7.0.1134" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp scrollPane1:::p:493:p, space ::174:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1:::p::p, space ::32:x}}"
+		} ) {
+			name: "this"
+			"title": "Client"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTree" ) {
+					name: "treedir"
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 675, 580 )
+		} )
+	}
+}
