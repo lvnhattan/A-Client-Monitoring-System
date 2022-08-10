@@ -9,7 +9,7 @@ import Config.User.Log;
 import me.alexpanov.net.FreePortFinder;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -36,6 +36,8 @@ public class FormServer extends JFrame {
     public static HashMap<String, PrintWriter> connectedClients = new HashMap<>();
     public static AccountUser Temp;
     public JTable tablelog;
+    public DefaultTableModel model;
+    private static String[] columns = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
 
     public FormServer() {
         initComponents();
@@ -48,8 +50,6 @@ public class FormServer extends JFrame {
                     FormServer frame = new FormServer();
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
                     SwingUtilities.updateComponentTreeUI(frame);
-                    //Logs
-                    //System.setOut(new PrintStream(new TextAreaOutputStream(frame.txtAreaLogs)));
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -65,7 +65,7 @@ public class FormServer extends JFrame {
                 getRandomPort();
                 Log temp = new Log("Server", "Start", "Port " + String.valueOf(PORT), LocalDateTime.now(), "Start Server");
                 Logs.add(temp);
-                start();
+                start(tablelog);
                 btnStart.setText("STOP");
             } else {
                 Log temp = new Log("Server", "Stop", "Port " + String.valueOf(PORT), LocalDateTime.now(), "Stop Server");
@@ -135,62 +135,32 @@ public class FormServer extends JFrame {
 
     public void refreshUIComponents() {
         lblChatServer.setText("CHAT SERVER" + (!exit ? ": " + PORT : ""));
-        Logtable model = new Logtable(Logs);
+        LoadLogServer();
+    }
+
+    private void LoadLogServer() {
+        model = new DefaultTableModel(null, columns);
+        addData(model, tablelog);
+    }
+
+    private static void addData(DefaultTableModel model, JTable tablelog) {
+        for (int i = 0; i < Logs.size(); i++) {
+            String name = Logs.get(i).getUsername();
+            String action = Logs.get(i).getAcction();
+            String ip = Logs.get(i).getIpclient();
+            LocalDateTime time = Logs.get(i).getTime();
+            String des = Logs.get(i).getDescription();
+
+            Object[] data = {name, action, ip, time, des};
+            model.addRow(data);
+        }
+
         tablelog.setModel(model);
+        tablelog.setRowSelectionAllowed(true);
     }
 
-    public static class Logtable extends AbstractTableModel {
-        private final String[] columns = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
-        private ArrayList<Log> Logs;
-
-        public Logtable(ArrayList<Log> Logs) {
-            this.Logs = Logs;
-        }
-
-        @Override
-        public int getRowCount() {
-            return Logs.size();
-        }
-
-        @Override
-        public int getColumnCount() {
-            return columns.length;
-        }
-
-        @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            return switch (columnIndex) {
-                case 0 -> Logs.get(rowIndex).getUsername();
-                case 1 -> Logs.get(rowIndex).getAcction();
-                case 2 -> Logs.get(rowIndex).getIpclient();
-                case 3 -> Logs.get(rowIndex).getTime();
-                case 4 -> Logs.get(rowIndex).getDescription();
-                default -> "-";
-            };
-        }
-
-        @Override
-        public String getColumnName(int column) {
-            return columns[column];
-        }
-
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            if (getValueAt(0, columnIndex) != null) {
-                return getValueAt(0, columnIndex).getClass();
-            } else {
-                return Object.class;
-            }
-        }
-
-        @Override
-        public void fireTableDataChanged() {
-            super.fireTableDataChanged();
-        }
-    }
-
-    public static void start() {
-        new Thread(new ServerHandler()).start();
+    public static void start(JTable log) {
+        new Thread(new ServerHandler(log)).start();
 
     }
 
@@ -205,13 +175,19 @@ public class FormServer extends JFrame {
     }
 
     private static class ServerHandler implements Runnable {
+        public JTable log;
+
+        public ServerHandler(JTable log){
+            this.log=log;
+        }
+
         @Override
         public void run() {
             try {
                 server = new ServerSocket(PORT);
                 while (!exit) {
                     if (connectedClients.size() <= MAX_CONNECTED) {
-                        new Thread(new ClientHandler(server.accept())).start();
+                        new Thread(new ClientHandler(server.accept(),log)).start();
                     }
                 }
             } catch (Exception e) {
@@ -225,16 +201,18 @@ public class FormServer extends JFrame {
         private Socket socket;
         private PrintWriter out;
         private BufferedReader in;
-        public JTable tablelog;
+        public JTable log;
 
-        public ClientHandler(Socket socket) {
+        public ClientHandler(Socket socket,JTable log) {
+            this.log=log;
             this.socket = socket;
         }
 
-        public void refreshUIComponents() {
-            Logtable model = new Logtable(Logs);
-            tablelog.setModel(model);
-            model.fireTableDataChanged();
+
+        public void LoadLogTable() {
+            DefaultTableModel model = new DefaultTableModel(null, columns);
+            FormServer.addData(model,log);
+
         }
 
         @Override
@@ -247,21 +225,23 @@ public class FormServer extends JFrame {
                 String check;
                 while (true) {
                     check = in.readLine();
-                    System.out.print(check);
                     if (check.equals("Connect")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
                         UserList.add(User);
                         Log temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now(), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
-                        //System.out.print(Temp.getUsername() + " " + Temp.getIpclient());
-                        refreshUIComponents();
+
                     }
+                    LoadLogTable();
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Bug", e.getMessage(), JOptionPane.ERROR_MESSAGE);
                 System.out.println(e.getMessage());
             } finally {
                 if (name != null) {
+                    Log temp = new Log(name, "Logout", String.valueOf(socket.getInetAddress()) ,LocalDateTime.now(), name + " Đăng Xuất");
+                    Logs.add(temp);
+                    UserList.remove(name);
 //                    addToLogs(name + " is leaving");
 //                    connectedClients.remove(name);
 //                    broadcastMessage(name + " has left");

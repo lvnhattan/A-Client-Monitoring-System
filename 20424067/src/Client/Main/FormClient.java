@@ -67,8 +67,7 @@ public class FormClient extends JFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - unknown
         scrollPane1 = new JScrollPane();
-        FileSystemModel filemode = new FileSystemModel();
-        treedir = new JTree(filemode);
+        treedir = new JTree();
 
         //======== this ========
         setTitle("Client");
