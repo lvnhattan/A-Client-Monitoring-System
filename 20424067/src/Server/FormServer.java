@@ -164,9 +164,9 @@ public class FormServer extends JFrame {
 
     }
 
-    public static void stop() throws IOException {
+   /* public static void stop() throws IOException {
         if (!server.isClosed()) server.close();
-    }
+    }*/
 
     private static int getRandomPort() {
         int port = FreePortFinder.findFreeLocalPort();
@@ -208,7 +208,6 @@ public class FormServer extends JFrame {
             this.socket = socket;
         }
 
-
         public void LoadLogTable() {
             DefaultTableModel model = new DefaultTableModel(null, columns);
             FormServer.addData(model,log);
@@ -232,6 +231,32 @@ public class FormServer extends JFrame {
                         Logs.add(temp);
 
                     }
+                    if(check.equals("Scanning")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "Scanning", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
+                        Logs.add(temp);
+                    }
+
+                    if(check.equals("ENTRY_CREATE")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "ENTRY_CREATE", User.getIpclient(), LocalDateTime.now(), "Tạo mới: "+des);
+                        Logs.add(temp);
+                    }
+
+                    if(check.equals("ENTRY_DELETE")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "ENTRY_DELETE", User.getIpclient(), LocalDateTime.now(), "Xóa: "+des);
+                        Logs.add(temp);
+                    }
+                    if(check.equals("ENTRY_MODIFY")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "ENTRY_MODIFY", User.getIpclient(), LocalDateTime.now(), "Chỉnh sửa: "+des);
+                        Logs.add(temp);
+                    }
                     LoadLogTable();
                 }
             } catch (Exception e) {
@@ -242,9 +267,6 @@ public class FormServer extends JFrame {
                     Log temp = new Log(name, "Logout", String.valueOf(socket.getInetAddress()) ,LocalDateTime.now(), name + " Đăng Xuất");
                     Logs.add(temp);
                     UserList.remove(name);
-//                    addToLogs(name + " is leaving");
-//                    connectedClients.remove(name);
-//                    broadcastMessage(name + " has left");
                 }
             }
         }

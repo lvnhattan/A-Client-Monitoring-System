@@ -36,10 +36,8 @@ public class FormClient extends JFrame {
     public void start(){
 
         try {
-
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(FormConnectPort.clientSocket.getInputStream()));
-
             new Thread(new Listener()).start();
 
         } catch (Exception err) {

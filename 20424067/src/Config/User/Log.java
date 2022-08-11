@@ -17,8 +17,7 @@ public class Log {
         Description = description;
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return Username;
     }
 

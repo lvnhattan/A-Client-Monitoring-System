@@ -13,7 +13,7 @@ public class FileSystemModel implements TreeModel {
 
     public FileSystemModel() {
 
-        root = System.getProperty("user.dir")+"/20424067";
+        root = System.getProperty("user.dir");
         File tempFile = new File(root);
         root = tempFile.getParent();
 
