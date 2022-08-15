@@ -1,4 +1,4 @@
-package Client;
+package Config;
 
 /*
  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
@@ -79,6 +79,8 @@ public class Tracking implements Runnable {
                 temp = new Log(username, "Register", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Register " + String.valueOf(dir));
                 userlogs.add(temp);
                 logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
+                logdir.writeFile(temp);
+
             } else {
                 if (!dir.equals(prev)) {
                     System.out.format("Update: %s -> %s\n", prev, dir);
@@ -86,6 +88,7 @@ public class Tracking implements Runnable {
                     temp = new Log(username, "Update", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Update: "+String.valueOf(prev)+" -> "+String.valueOf(dir));
                     userlogs.add(temp);
                     logdir.sendPack(username, logdir.getSocket(), String.valueOf(prev)+" -> "+String.valueOf(dir));
+                    logdir.writeFile(temp);
                 }
             }
         }
@@ -124,12 +127,15 @@ public class Tracking implements Runnable {
             temp = new Log(username, "Scanning", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Scanning: " + String.valueOf(dir));
             userlogs.add(temp);
             logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
+            logdir.writeFile(temp);
             registerAll(dir);
+
             System.out.println("Done");
             logdir.sendMess("Done");
             temp = new Log(username, "Done", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Done: " + String.valueOf(dir));
             userlogs.add(temp);
             logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
+            logdir.writeFile(temp);
         } else {
             register(dir);
         }
@@ -177,9 +183,10 @@ public class Tracking implements Runnable {
                     // print out event
                     System.out.format("%s: %s\n", event.kind().name(), child);
                     logdir.sendMess(event.kind().name());
-                    logdir.sendPack(username, logdir.getSocket(), String.valueOf(child));
                     temp = new Log(username, event.kind().name(), String.valueOf(logdir.getSocket()), LocalDateTime.now(), event.kind().name() + " " + String.valueOf(dir));
                     userlogs.add(temp);
+                    logdir.sendPack(username, logdir.getSocket(), String.valueOf(child));
+                    logdir.writeFile(temp);
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories
                     if (recursive && (kind == ENTRY_CREATE)) {

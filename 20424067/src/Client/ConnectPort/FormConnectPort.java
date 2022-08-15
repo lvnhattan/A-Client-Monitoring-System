@@ -5,9 +5,9 @@
 package Client.ConnectPort;
 
 
-import Client.LogDir;
+import Config.LogDir;
 import Client.Main.FormClient;
-import Client.Tracking;
+import Config.Tracking;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,17 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static java.nio.file.StandardWatchEventKinds.*;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 /**
  * @author nhat tan

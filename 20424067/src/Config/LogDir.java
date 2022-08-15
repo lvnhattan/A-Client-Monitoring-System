@@ -1,15 +1,9 @@
-package Client;
+package Config;
 
 import Config.User.Log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 
 public class LogDir {
@@ -33,11 +27,6 @@ public class LogDir {
     public void sendMess(String msg)
     {
         out.println(msg);
-        try {
-            Files.write(Paths.get("ClientHistory.txt"), msg.getBytes(), StandardOpenOption.APPEND);
-        }catch (IOException e) {
-            //exception handling left as an exercise for the reader
-        }
     }
 
     public Socket getSocket() {
@@ -56,5 +45,21 @@ public class LogDir {
         return user;
     }
 
+    public void readFile(){
+
+    }
+
+    public void writeFile(Log log){
+        try {
+            FileWriter myWriter = new FileWriter("ClientLogs.txt");
+            String temp = log.getUsername()+" "+log.getAcction()+" "+log.getIpclient()+" "+log.getTime()+" "+log.getDescription();
+            myWriter.write(temp);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 
 }
