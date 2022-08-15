@@ -259,7 +259,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
+                        Log temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now(),"Register: " +des);
                         Logs.add(temp);
                     }
 
@@ -269,7 +269,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
+                        Log temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now(),"Update: " +des);
                         Logs.add(temp);
                     }
 
@@ -279,7 +279,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "ENTRY_CREATE", User.getIpclient(), LocalDateTime.now(), "Tạo mới: "+des);
+                        Log temp = new Log(User.getUsername(), "Create", User.getIpclient(), LocalDateTime.now(), "Tạo mới: "+des);
                         Logs.add(temp);
                     }
 
@@ -289,7 +289,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "ENTRY_DELETE", User.getIpclient(), LocalDateTime.now(), "Xóa: "+des);
+                        Log temp = new Log(User.getUsername(), "Delete", User.getIpclient(), LocalDateTime.now(), "Xóa: "+des);
                         Logs.add(temp);
                     }
                     if(check.equals("ENTRY_MODIFY")){
@@ -298,7 +298,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "ENTRY_MODIFY", User.getIpclient(), LocalDateTime.now(), "Chỉnh sửa: "+des);
+                        Log temp = new Log(User.getUsername(), "Modify", User.getIpclient(), LocalDateTime.now(), "Chỉnh sửa: "+des);
                         Logs.add(temp);
                     }
                     LoadLogTable();

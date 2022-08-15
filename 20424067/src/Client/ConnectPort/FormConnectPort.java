@@ -53,7 +53,7 @@ public class FormConnectPort extends JFrame {
     private void btnConnectActionPerformed(ActionEvent e) {
         start();
         if (isrunning) {
-            JOptionPane.showMessageDialog(this, "Success." + txtName.getText() + " " + clientSocket.getInetAddress() + " " + clientSocket.getPort());
+            JOptionPane.showMessageDialog(this, "Success." + txtName.getText() + ":" + clientSocket.getInetAddress() + " " + clientSocket.getPort()+ " "+clientSocket.getLocalPort());
             FormClient client = new FormClient();
             client.setVisible(true);
             this.setVisible(false);
@@ -83,7 +83,7 @@ public class FormConnectPort extends JFrame {
 
                 out.println("Connect");
                 out.println(txtName.getText());
-                out.println(clientSocket.getInetAddress() + " " + clientSocket.getPort());
+                out.println(clientSocket.getInetAddress() + ":" + clientSocket.getPort()+" "+clientSocket.getLocalPort());
 
             } catch (Exception err) {
                 System.out.println("[ERROR] " + err.getLocalizedMessage());

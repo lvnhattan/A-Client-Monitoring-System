@@ -19,11 +19,12 @@ public class AccountUser {
         return Ipclient;
     }
 
-    public boolean CheckAccount(ArrayList<AccountUser> list,AccountUser user)
-    {
-        for(int i=0;i<=list.size();i++){
-            if (list.get(i).getUsername().equals(user.getUsername())&list.get(i).getIpclient().equals(user.getIpclient())){
-                return true;
+    public boolean CheckAccount(ArrayList<AccountUser> list, AccountUser user) {
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getUsername().equals(user.getUsername()) & list.get(i).getIpclient().equals(user.getIpclient())) {
+                    return true;
+                }
             }
         }
         return false;

@@ -34,13 +34,16 @@ package Config;
 import Config.User.Log;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.nio.file.*;
-import static java.nio.file.StandardWatchEventKinds.*;
-import static java.nio.file.LinkOption.*;
-import java.nio.file.attribute.*;
-import java.io.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
  * Example to watch a directory (or tree) for changes to files.
@@ -85,9 +88,9 @@ public class Tracking implements Runnable {
                 if (!dir.equals(prev)) {
                     System.out.format("Update: %s -> %s\n", prev, dir);
                     logdir.sendMess("Update");
-                    temp = new Log(username, "Update", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Update: "+String.valueOf(prev)+" -> "+String.valueOf(dir));
+                    temp = new Log(username, "Update", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Update: " + String.valueOf(prev) + " -> " + String.valueOf(dir));
                     userlogs.add(temp);
-                    logdir.sendPack(username, logdir.getSocket(), String.valueOf(prev)+" -> "+String.valueOf(dir));
+                    logdir.sendPack(username, logdir.getSocket(), String.valueOf(prev) + " -> " + String.valueOf(dir));
                     logdir.writeFile(temp);
                 }
             }
@@ -183,7 +186,15 @@ public class Tracking implements Runnable {
                     // print out event
                     System.out.format("%s: %s\n", event.kind().name(), child);
                     logdir.sendMess(event.kind().name());
-                    temp = new Log(username, event.kind().name(), String.valueOf(logdir.getSocket()), LocalDateTime.now(), event.kind().name() + " " + String.valueOf(dir));
+                    String acction="" ;
+                    if (event.kind().name().equals(ENTRY_CREATE.name())) {
+                        acction = "Create";
+                    } else if (event.kind().name().equals(ENTRY_DELETE.name())) {
+                        acction = "Delete";
+                    } else if (event.kind().name().equals(ENTRY_MODIFY.name())) {
+                        acction = "Modify";
+                    }
+                    temp = new Log(username, acction, String.valueOf(logdir.getSocket()), LocalDateTime.now(), acction + " " + String.valueOf(child));
                     userlogs.add(temp);
                     logdir.sendPack(username, logdir.getSocket(), String.valueOf(child));
                     logdir.writeFile(temp);
