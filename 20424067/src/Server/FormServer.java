@@ -4,6 +4,7 @@
 
 package Server;
 
+import Config.LogDir;
 import Config.User.AccountUser;
 import Config.User.Log;
 import me.alexpanov.net.FreePortFinder;
@@ -12,13 +13,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,18 +30,23 @@ import java.util.HashMap;
 public class FormServer extends JFrame {
     private static final int MAX_CONNECTED = 50;
     private static int PORT;
-    public static ServerSocket server;
     private static volatile boolean exit = false;
+    public static ServerSocket server;
     public static ArrayList<AccountUser> UserList = new ArrayList<>();
     public static ArrayList<Log> Logs = new ArrayList<>();
     public static HashMap<String, PrintWriter> connectedClients = new HashMap<>();
     public static AccountUser Temp;
+    public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    public String filelog = "ServerLogs.txt";
     public JTable tablelog;
     public DefaultTableModel model;
     private static String[] columns = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
 
     public FormServer() {
         initComponents();
+        Log temp=new Log("","","",LocalDateTime.now().format(dateFormat),"");
+        temp.readFile(Logs,filelog);
+        LoadLogServer();
     }
 
     public static void main(String[] args) {
@@ -59,18 +65,21 @@ public class FormServer extends JFrame {
     }
 
     private void btnStart(ActionEvent e) {
+        Log temp=new Log("","","",LocalDateTime.now().format(dateFormat),"");
         if (e.getSource() == btnStart) {
             if (btnStart.getText().equals("START")) {
                 exit = false;
                 getRandomPort();
-                Log temp = new Log("Server", "Start", "Port " + String.valueOf(PORT), LocalDateTime.now(), "Start Server");
+                temp = new Log("Server", "Start", "Port " + String.valueOf(PORT), LocalDateTime.now().format(dateFormat), "Start Server");
                 Logs.add(temp);
                 start(tablelog);
+                temp.writeFile(temp,filelog);
                 btnStart.setText("STOP");
             } else {
-                Log temp = new Log("Server", "Stop", "Port " + String.valueOf(PORT), LocalDateTime.now(), "Stop Server");
+                temp = new Log("Server", "Stop", "Port " + String.valueOf(PORT), LocalDateTime.now().format(dateFormat), "Stop Server");
                 Logs.add(temp);
                 exit = true;
+                temp.writeFile(temp,filelog);
                 btnStart.setText("START");
             }
         }
@@ -133,6 +142,7 @@ public class FormServer extends JFrame {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
+
     public void refreshUIComponents() {
         lblChatServer.setText("CHAT SERVER" + (!exit ? ": " + PORT : ""));
         LoadLogServer();
@@ -148,7 +158,7 @@ public class FormServer extends JFrame {
             String name = Logs.get(i).getUsername();
             String action = Logs.get(i).getAcction();
             String ip = Logs.get(i).getIpclient();
-            LocalDateTime time = Logs.get(i).getTime();
+            String time = Logs.get(i).getTime();
             String des = Logs.get(i).getDescription();
 
             Object[] data = {name, action, ip, time, des};
@@ -157,6 +167,7 @@ public class FormServer extends JFrame {
 
         tablelog.setModel(model);
         tablelog.setRowSelectionAllowed(true);
+
     }
 
     public static void start(JTable log) {
@@ -177,8 +188,10 @@ public class FormServer extends JFrame {
     private static class ServerHandler implements Runnable {
         public JTable log;
 
+
         public ServerHandler(JTable log){
             this.log=log;
+
         }
 
         @Override
@@ -196,12 +209,15 @@ public class FormServer extends JFrame {
         }
     }
 
+
+
     // Start of Client Handler
     private static class ClientHandler implements Runnable {
         private Socket socket;
         private PrintWriter out;
         private BufferedReader in;
         public JTable log;
+        public String filelog = "ServerLogs.txt";
 
         public ClientHandler(Socket socket,JTable log) {
             this.log=log;
@@ -222,6 +238,7 @@ public class FormServer extends JFrame {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
                 String check;
+                Log temp=new Log("","","",LocalDateTime.now().format(dateFormat),"");
                 while (true) {
                     check = in.readLine();
                     if (check.equals("Connect")) {
@@ -229,9 +246,9 @@ public class FormServer extends JFrame {
                         if(!User.CheckAccount(UserList,User)){
                             UserList.add(User);
                         }
-                        Log temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now(), User.getUsername() + " Đăng nhập");
+                        temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now().format(dateFormat), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
-
+                        name=User.getUsername();
                     }
                     if(check.equals("Scanning")){
                         var User = new AccountUser(in.readLine(), in.readLine());
@@ -239,7 +256,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Scanning", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
+                        temp = new Log(User.getUsername(), "Scanning", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Scanning: " +des);
                         Logs.add(temp);
                     }
 
@@ -249,7 +266,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Done", User.getIpclient(), LocalDateTime.now(),"Done: " +des);
+                        temp = new Log(User.getUsername(), "Done", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Done: " +des);
                         Logs.add(temp);
                     }
 
@@ -259,7 +276,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now(),"Register: " +des);
+                        temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Register: " +des);
                         Logs.add(temp);
                     }
 
@@ -269,7 +286,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now(),"Update: " +des);
+                        temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Update: " +des);
                         Logs.add(temp);
                     }
 
@@ -279,7 +296,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Create", User.getIpclient(), LocalDateTime.now(), "Tạo mới: "+des);
+                        temp = new Log(User.getUsername(), "Create", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Tạo mới: "+des);
                         Logs.add(temp);
                     }
 
@@ -289,7 +306,7 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Delete", User.getIpclient(), LocalDateTime.now(), "Xóa: "+des);
+                        temp = new Log(User.getUsername(), "Delete", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Xóa: "+des);
                         Logs.add(temp);
                     }
                     if(check.equals("ENTRY_MODIFY")){
@@ -298,17 +315,18 @@ public class FormServer extends JFrame {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        Log temp = new Log(User.getUsername(), "Modify", User.getIpclient(), LocalDateTime.now(), "Chỉnh sửa: "+des);
+                        temp = new Log(User.getUsername(), "Modify", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Chỉnh sửa: "+des);
                         Logs.add(temp);
                     }
+                    temp.writeFile(temp,filelog);
                     LoadLogTable();
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Bug", e.getMessage(), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(), "Bug" ,JOptionPane.ERROR_MESSAGE);
                 System.out.println(e.getMessage());
             } finally {
                 if (name != null) {
-                    Log temp = new Log(name, "Logout", String.valueOf(socket.getInetAddress()) ,LocalDateTime.now(), name + " Đăng Xuất");
+                    Log temp = new Log(name, "Logout", String.valueOf(socket.getInetAddress()) ,LocalDateTime.now().format(dateFormat), name + " Đăng Xuất");
                     Logs.add(temp);
                     UserList.remove(name);
                 }

@@ -5,6 +5,7 @@ import Config.User.Log;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LogDir {
 
@@ -14,14 +15,12 @@ public class LogDir {
 
     public LogDir(Socket socket) {
         this.socket = socket;
-
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -41,16 +40,13 @@ public class LogDir {
     }
 
     public Log getPack(String name, Socket socket, String msg) {
-        Log user = new Log(name, "", socket.getInetAddress() + ":" + socket.getPort() + " " + socket.getLocalPort(), LocalDateTime.now(), msg);
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        Log user = new Log(name, "", socket.getInetAddress() + ":" + socket.getPort() + " " + socket.getLocalPort(), LocalDateTime.now().format(dateFormat), msg);
         return user;
     }
 
-    public void readFile() {
-
-    }
-
-    public void writeFile(Log log) {
-        File file = new File("ClientLogs.txt");
+    public void writeFile(Log log,String dir) {
+        File file = new File(dir);
         try {
             if (!file.exists()) {
                 file.createNewFile();

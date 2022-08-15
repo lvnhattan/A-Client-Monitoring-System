@@ -1,0 +1,42 @@
+Server|Stop|Port 1104|2022-08-15 16:37|Stop Server
+Server|Start|Port 1101|2022-08-15 16:38|Start Server
+Tan|Login|localhost/127.0.0.1:1101 56716|2022-08-15 16:38|Tan Đăng nhập
+Tan|Scanning|localhost/127.0.0.1:1101 56716|2022-08-15 16:38|Scanning: D:\Test
+Tan|Done|localhost/127.0.0.1:1101 56716|2022-08-15 16:38|Done: D:\Test
+Tan|Delete|localhost/127.0.0.1:1101 56716|2022-08-15 16:38|Xóa: D:\Test\abc.txt
+Tan|Create|localhost/127.0.0.1:1101 56716|2022-08-15 16:38|Tạo mới: D:\Test\qwe.txt
+Tan|Create|localhost/127.0.0.1:1101 56716|2022-08-15 16:39|Tạo mới: D:\Test\New Text Document.txt
+Tan|Create|localhost/127.0.0.1:1101 56716|2022-08-15 16:39|Tạo mới: D:\Test\New folder
+Tan|Register|localhost/127.0.0.1:1101 56716|2022-08-15 16:39|Register: D:\Test\New folder
+Tan|Delete|localhost/127.0.0.1:1101 56716|2022-08-15 16:39|Xóa: D:\Test\New folder
+Tan|Create|localhost/127.0.0.1:1101 56716|2022-08-15 16:39|Tạo mới: D:\Test\TAn
+Tan|Update|localhost/127.0.0.1:1101 56716|2022-08-15 16:39|Update: D:\Test\New folder -> D:\Test\TAn
+Server|Stop|Port 1101|2022-08-15 16:39|Stop Server
+Server|Start|Port 1101|2022-08-15 16:39|Start Server
+Server|Stop|Port 1101|2022-08-15 16:39|Stop Server
+Server|Start|Port 1102|2022-08-15 16:39|Start Server
+Server|Start|Port 1101|2022-08-15 16:58|Start Server
+Huy|Login|localhost/127.0.0.1:1101 56878|2022-08-15 16:58|Huy Đăng nhập
+Huy|Scanning|localhost/127.0.0.1:1101 56878|2022-08-15 16:58|Scanning: D:\Test
+Huy|Done|localhost/127.0.0.1:1101 56878|2022-08-15 16:58|Done: D:\Test
+Quy|Login|localhost/127.0.0.1:1101 56879|2022-08-15 16:58|Quy Đăng nhập
+Quy|Scanning|localhost/127.0.0.1:1101 56879|2022-08-15 16:58|Scanning: D:\Test
+Quy|Done|localhost/127.0.0.1:1101 56879|2022-08-15 16:58|Done: D:\Test
+Huy|Delete|localhost/127.0.0.1:1101 56878|2022-08-15 16:58|Xóa: D:\Test\New Text Document.txt
+Quy|Delete|localhost/127.0.0.1:1101 56879|2022-08-15 16:58|Xóa: D:\Test\New Text Document.txt
+Server|Stop|Port 1101|2022-08-15 16:58|Stop Server
+Server|Start|Port 1101|2022-08-15 16:59|Start Server
+Huy|Login|localhost/127.0.0.1:1101 56896|2022-08-15 17:00|Huy Đăng nhập
+Huy|Scanning|localhost/127.0.0.1:1101 56896|2022-08-15 17:00|Scanning: D:\Test
+Huy|Done|localhost/127.0.0.1:1101 56896|2022-08-15 17:00|Done: D:\Test
+Tan|Login|localhost/127.0.0.1:1101 56898|2022-08-15 17:00|Tan Đăng nhập
+Tan|Scanning|localhost/127.0.0.1:1101 56898|2022-08-15 17:00|Scanning: D:\Test
+Tan|Done|localhost/127.0.0.1:1101 56898|2022-08-15 17:00|Done: D:\Test
+Tan|Delete|localhost/127.0.0.1:1101 56898|2022-08-15 17:00|Xóa: D:\Test\qwe.txt
+Huy|Delete|localhost/127.0.0.1:1101 56896|2022-08-15 17:00|Xóa: D:\Test\qwe.txt
+Huy|Create|localhost/127.0.0.1:1101 56896|2022-08-15 17:00|Tạo mới: D:\Test\123.txt
+Tan|Create|localhost/127.0.0.1:1101 56898|2022-08-15 17:00|Tạo mới: D:\Test\123.txt
+Huy|Delete|localhost/127.0.0.1:1101 56896|2022-08-15 17:01|Xóa: D:\Test\123.txt
+Tan|Delete|localhost/127.0.0.1:1101 56898|2022-08-15 17:01|Xóa: D:\Test\123.txt
+Huy|Create|localhost/127.0.0.1:1101 56896|2022-08-15 17:01|Tạo mới: D:\Test\abc.txt
+Tan|Create|localhost/127.0.0.1:1101 56898|2022-08-15 17:01|Tạo mới: D:\Test\abc.txt
