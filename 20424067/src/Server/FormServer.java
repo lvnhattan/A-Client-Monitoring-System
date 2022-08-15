@@ -226,20 +226,38 @@ public class FormServer extends JFrame {
                     check = in.readLine();
                     if (check.equals("Connect")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        UserList.add(User);
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
                         Log temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now(), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
 
                     }
                     if(check.equals("Scanning")){
                         var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
                         var des = in.readLine();
                         Log temp = new Log(User.getUsername(), "Scanning", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
                         Logs.add(temp);
                     }
 
+                    if(check.equals("Scanning")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "Done", User.getIpclient(), LocalDateTime.now(),"Done: " +des);
+                        Logs.add(temp);
+                    }
+
                     if(check.equals("ENTRY_CREATE")){
                         var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
                         var des = in.readLine();
                         Log temp = new Log(User.getUsername(), "ENTRY_CREATE", User.getIpclient(), LocalDateTime.now(), "Tạo mới: "+des);
                         Logs.add(temp);
@@ -247,12 +265,18 @@ public class FormServer extends JFrame {
 
                     if(check.equals("ENTRY_DELETE")){
                         var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
                         var des = in.readLine();
                         Log temp = new Log(User.getUsername(), "ENTRY_DELETE", User.getIpclient(), LocalDateTime.now(), "Xóa: "+des);
                         Logs.add(temp);
                     }
                     if(check.equals("ENTRY_MODIFY")){
                         var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
                         var des = in.readLine();
                         Log temp = new Log(User.getUsername(), "ENTRY_MODIFY", User.getIpclient(), LocalDateTime.now(), "Chỉnh sửa: "+des);
                         Logs.add(temp);

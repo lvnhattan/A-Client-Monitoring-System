@@ -95,7 +95,6 @@ public class FormConnectPort extends JFrame {
 
             } catch (Exception err) {
                 System.out.println("[ERROR] " + err.getLocalizedMessage());
-                //out.println("[ERROR] "+err.getLocalizedMessage());
                 isrunning = false;
             }
         }

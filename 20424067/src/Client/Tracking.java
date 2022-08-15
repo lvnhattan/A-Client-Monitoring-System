@@ -39,6 +39,7 @@ import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.LinkOption.*;
 import java.nio.file.attribute.*;
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -48,20 +49,21 @@ import java.util.*;
 public class Tracking implements Runnable {
 
     private WatchService watcher;
-    private Map<WatchKey,Path> keys;
+    private Map<WatchKey, Path> keys;
     private boolean recursive;
     private boolean trace = false;
-
+    public static ArrayList<Log> userlogs = new ArrayList<>();
     public LogDir logdir;
+    public Log temp;
     public String username;
 
-    public Tracking(LogDir logdir){
-        this.logdir=logdir;
+    public Tracking(LogDir logdir) {
+        this.logdir = logdir;
     }
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
-        return (WatchEvent<T>)event;
+        return (WatchEvent<T>) event;
     }
 
     /**
@@ -93,8 +95,7 @@ public class Tracking implements Runnable {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                    throws IOException
-            {
+                    throws IOException {
                 register(dir);
                 return FileVisitResult.CONTINUE;
             }
@@ -106,18 +107,23 @@ public class Tracking implements Runnable {
      */
     public Tracking(Path dir, boolean recursive, LogDir logdir, String username) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
-        this.keys = new HashMap<WatchKey,Path>();
+        this.keys = new HashMap<WatchKey, Path>();
         this.recursive = recursive;
-        this.logdir= logdir;
-        this.username=username;
+        this.logdir = logdir;
+        this.username = username;
 
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
             logdir.sendMess("Scanning");
-            logdir.sendPack(username,logdir.getSocket(),String.valueOf(dir));
+            logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
+            temp = new Log(username, "Scanning", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Scanning " + String.valueOf(dir));
+            userlogs.add(temp);
             registerAll(dir);
             System.out.println("Done");
             logdir.sendMess("Done");
+            temp = new Log(username, "Done", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Done " + String.valueOf(dir));
+            userlogs.add(temp);
+            logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
         } else {
             register(dir);
         }
@@ -165,8 +171,9 @@ public class Tracking implements Runnable {
                     // print out event
                     System.out.format("%s: %s\n", event.kind().name(), child);
                     logdir.sendMess(event.kind().name());
-                    logdir.sendPack(username,logdir.getSocket(),String.valueOf(child));
-
+                    logdir.sendPack(username, logdir.getSocket(), String.valueOf(child));
+                    temp = new Log(username, event.kind().name(), String.valueOf(logdir.getSocket()), LocalDateTime.now(), event.kind().name() + " " + String.valueOf(dir));
+                    userlogs.add(temp);
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories
                     if (recursive && (kind == ENTRY_CREATE)) {
@@ -175,7 +182,7 @@ public class Tracking implements Runnable {
                                 registerAll(child);
                             }
                         } catch (IOException x) {
-                            // ignore to keep sample readbale
+                            // ignore to keep sample readable
                         }
                     }
                 }
@@ -197,26 +204,9 @@ public class Tracking implements Runnable {
             System.out.println(e.getMessage());
         }
     }
-
-    static void usage() {
+}
+/*    static void usage() {
         System.err.println("usage: java Tracking [-r] dir");
         System.exit(-1);
-    }
+    }*/
 
-//    public static void main(String[] args) throws IOException {
-//        // parse arguments
-//        if (args.length == 0 || args.length > 2)
-//            usage();
-//        boolean recursive = false;
-//        int dirArg = 0;
-//        if (args[0].equals("-r")) {
-//            if (args.length < 2)
-//                usage();
-//            recursive = true;
-//            dirArg++;
-//        }
-//
-//        // register directory and process its events
-//
-//    }
-}
