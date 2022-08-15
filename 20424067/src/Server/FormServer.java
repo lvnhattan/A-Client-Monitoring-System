@@ -243,13 +243,33 @@ public class FormServer extends JFrame {
                         Logs.add(temp);
                     }
 
-                    if(check.equals("Scanning")){
+                    if(check.equals("Done")){
                         var User = new AccountUser(in.readLine(), in.readLine());
                         if(!User.CheckAccount(UserList,User)){
                             UserList.add(User);
                         }
                         var des = in.readLine();
                         Log temp = new Log(User.getUsername(), "Done", User.getIpclient(), LocalDateTime.now(),"Done: " +des);
+                        Logs.add(temp);
+                    }
+
+                    if(check.equals("Register")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
+                        Logs.add(temp);
+                    }
+
+                    if(check.equals("Update")){
+                        var User = new AccountUser(in.readLine(), in.readLine());
+                        if(!User.CheckAccount(UserList,User)){
+                            UserList.add(User);
+                        }
+                        var des = in.readLine();
+                        Log temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now(),"Scanning: " +des);
                         Logs.add(temp);
                     }
 

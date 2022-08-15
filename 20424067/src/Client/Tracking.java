@@ -74,12 +74,18 @@ public class Tracking implements Runnable {
         if (trace) {
             Path prev = keys.get(key);
             if (prev == null) {
-                System.out.format("register: %s\n", dir);
-                //logdir.sendMess("register: %s\n" + dir);
+                System.out.format("Register: %s\n", dir);
+                logdir.sendMess("Register");
+                temp = new Log(username, "Register", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Register " + String.valueOf(dir));
+                userlogs.add(temp);
+                logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
             } else {
                 if (!dir.equals(prev)) {
-                    System.out.format("update: %s -> %s\n", prev, dir);
-                    //logdir.sendMess("update: %s -> %s\n"+ prev + dir);
+                    System.out.format("Update: %s -> %s\n", prev, dir);
+                    logdir.sendMess("Update");
+                    temp = new Log(username, "Update", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Update: "+String.valueOf(prev)+" -> "+String.valueOf(dir));
+                    userlogs.add(temp);
+                    logdir.sendPack(username, logdir.getSocket(), String.valueOf(prev)+" -> "+String.valueOf(dir));
                 }
             }
         }
@@ -115,13 +121,13 @@ public class Tracking implements Runnable {
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
             logdir.sendMess("Scanning");
-            logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
-            temp = new Log(username, "Scanning", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Scanning " + String.valueOf(dir));
+            temp = new Log(username, "Scanning", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Scanning: " + String.valueOf(dir));
             userlogs.add(temp);
+            logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
             registerAll(dir);
             System.out.println("Done");
             logdir.sendMess("Done");
-            temp = new Log(username, "Done", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Done " + String.valueOf(dir));
+            temp = new Log(username, "Done", String.valueOf(logdir.getSocket()), LocalDateTime.now(), "Done: " + String.valueOf(dir));
             userlogs.add(temp);
             logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
         } else {

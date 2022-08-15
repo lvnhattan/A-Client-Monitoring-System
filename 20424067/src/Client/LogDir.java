@@ -44,10 +44,10 @@ public class LogDir {
         return socket;
     }
 
-    public void sendPack(String name, Socket socket, String msg){
+    public void sendPack(String name, Socket socket, String des){
         out.println(name);
         out.println(socket.getInetAddress() + " " + socket.getPort());
-        out.println(msg);
+        out.println(des);
 
     }
 
