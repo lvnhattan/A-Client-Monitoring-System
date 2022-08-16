@@ -46,8 +46,6 @@ public class FormClient extends JFrame {
         start();
     }
 
-
-
     public static class Listener implements Runnable{
         private PrintWriter out;
         private BufferedReader in;
@@ -58,7 +56,6 @@ public class FormClient extends JFrame {
             try {
                 out = new PrintWriter(FormConnectPort.clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(FormConnectPort.clientSocket.getInputStream()));
-                String read;
 
             } catch (IOException e) {
                 return;
@@ -68,12 +65,12 @@ public class FormClient extends JFrame {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - unknown
-        scrollPane1 = new JScrollPane();
         btnStart = new JButton();
 
         //======== this ========
         setTitle("Client");
         var contentPane = getContentPane();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //---- btnStart ----
         btnStart.setText("Start");
@@ -84,19 +81,16 @@ public class FormClient extends JFrame {
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 493, GroupLayout.PREFERRED_SIZE)
-                    .addGap(24, 24, 24)
+                    .addContainerGap()
                     .addComponent(btnStart, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(12, Short.MAX_VALUE))
+                    .addContainerGap(258, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(btnStart)
-                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(btnStart)
+                    .addContainerGap(211, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -105,7 +99,6 @@ public class FormClient extends JFrame {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - unknown
-    private JScrollPane scrollPane1;
     private JButton btnStart;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

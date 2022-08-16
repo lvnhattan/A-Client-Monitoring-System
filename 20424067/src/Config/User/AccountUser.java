@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class AccountUser {
     private String Username;
     private String Ipclient;
+//    private String Pathdir="D:/Test";
 
     public AccountUser(String username, String ipclient) {
         Username = username;

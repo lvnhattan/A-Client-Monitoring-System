@@ -4,7 +4,7 @@
 
 package Server;
 
-import Config.LogDir;
+import java.awt.event.*;
 import Config.User.AccountUser;
 import Config.User.Log;
 import me.alexpanov.net.FreePortFinder;
@@ -13,11 +13,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,18 +35,21 @@ public class FormServer extends JFrame {
     public static ArrayList<AccountUser> UserList = new ArrayList<>();
     public static ArrayList<Log> Logs = new ArrayList<>();
     public static HashMap<String, PrintWriter> connectedClients = new HashMap<>();
-    public static AccountUser Temp;
+    public static AccountUser selectUser;
     public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public String filelog = "ServerLogs.txt";
     public JTable tablelog;
-    public DefaultTableModel model;
-    private static String[] columns = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
+    public JTable tableuser;
+    public DefaultTableModel modellog;
+    public DefaultTableModel modeluser;
+    private static String[] columnslog = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
+    private static String[] columnsuser = {"Username", "Ipclient"};
 
     public FormServer() {
         initComponents();
-        Log temp=new Log("","","",LocalDateTime.now().format(dateFormat),"");
-        temp.readFile(Logs,filelog);
-        LoadLogServer();
+        Log temp = new Log("", "", "", LocalDateTime.now().format(dateFormat), "");
+        temp.readFile(Logs, filelog);
+        LoadTableServer();
     }
 
     public static void main(String[] args) {
@@ -57,6 +60,7 @@ public class FormServer extends JFrame {
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
                     SwingUtilities.updateComponentTreeUI(frame);
                     frame.setVisible(true);
+                    new Thread(new refeshTable(frame)).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -65,26 +69,45 @@ public class FormServer extends JFrame {
     }
 
     private void btnStart(ActionEvent e) {
-        Log temp=new Log("","","",LocalDateTime.now().format(dateFormat),"");
+        Log temp;
         if (e.getSource() == btnStart) {
             if (btnStart.getText().equals("START")) {
                 exit = false;
                 getRandomPort();
-                temp = new Log("Server", "Start", "Port " + String.valueOf(PORT), LocalDateTime.now().format(dateFormat), "Start Server");
+                temp = new Log("Server", "Start", "Port " + PORT, LocalDateTime.now().format(dateFormat), "Start Server");
                 Logs.add(temp);
-                start(tablelog);
-                temp.writeFile(temp,filelog);
+                start(tablelog, tableuser);
+                temp.writeFile(temp, filelog);
                 btnStart.setText("STOP");
             } else {
-                temp = new Log("Server", "Stop", "Port " + String.valueOf(PORT), LocalDateTime.now().format(dateFormat), "Stop Server");
+                temp = new Log("Server", "Stop", "Port " + PORT, LocalDateTime.now().format(dateFormat), "Stop Server");
                 Logs.add(temp);
                 exit = true;
-                temp.writeFile(temp,filelog);
+                temp.writeFile(temp, filelog);
                 btnStart.setText("START");
             }
         }
         //Refresh UI
         refreshUIComponents();
+    }
+
+    private void btnChangedir(ActionEvent e) {
+        if(selectUser!=null) {
+            FormChangeDir fchangedir = new FormChangeDir(selectUser);
+            fchangedir.setVisible(true);
+        }
+        btnChangedir.setEnabled(false);
+    }
+
+    private void tableuserMouseClicked(MouseEvent e) {
+        int selectedRow = tableuser.getSelectedRow();
+        selectUser = new AccountUser((String) tableuser.getValueAt(selectedRow,0),(String) tableuser.getValueAt(selectedRow,1));
+        System.out.println("Selected: " + selectUser.getUsername() + " " + selectUser.getIpclient());
+        if(selectUser!=null)
+        {
+            btnChangedir.setText("Change Directory: "+selectUser.getUsername() + " " + selectUser.getIpclient());
+            btnChangedir.setEnabled(true);
+        }
     }
 
     public void initComponents() {
@@ -94,6 +117,9 @@ public class FormServer extends JFrame {
         scrollPane = new JScrollPane();
         tablelog = new JTable();
         btnStart = new JButton();
+        scrollPane1 = new JScrollPane();
+        tableuser = new JTable();
+        btnChangedir = new JButton();
 
         //======== this ========
         setResizable(false);
@@ -115,45 +141,75 @@ public class FormServer extends JFrame {
         btnStart.setText("START");
         btnStart.addActionListener(e -> btnStart(e));
 
+        //======== scrollPane1 ========
+        {
+            //---- tableuser ----
+            tableuser.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    tableuserMouseClicked(e);
+                }
+            });
+            scrollPane1.setViewportView(tableuser);
+        }
+
+        //---- btnChangedir ----
+        btnChangedir.setText("Change Directory");
+        btnChangedir.setEnabled(false);
+        btnChangedir.addActionListener(e -> btnChangedir(e));
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(lblChatServer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(btnStart, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
-                                        .addComponent(lblChatServer, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
-                                        .addComponent(scrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE))
-                                .addContainerGap())
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(btnChangedir, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(btnStart, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
+                                .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE))))
+                    .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addComponent(lblChatServer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnStart)
-                                .addGap(127, 127, 127))
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addComponent(lblChatServer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnStart, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                        .addComponent(btnChangedir, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addGap(20, 20, 20))
         );
-        setSize(1040, 590);
+        setSize(1160, 595);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
-
     public void refreshUIComponents() {
         lblChatServer.setText("CHAT SERVER" + (!exit ? ": " + PORT : ""));
-        LoadLogServer();
+        LoadTableServer();
     }
 
-    private void LoadLogServer() {
-        model = new DefaultTableModel(null, columns);
-        addData(model, tablelog);
+    public void LoadTableServer() {
+        modellog = new DefaultTableModel(null, columnslog);
+        addDataLog(modellog, tablelog);
+
+        modeluser = new DefaultTableModel(null, columnsuser);
+        addDataUser(modeluser, tableuser);
+
     }
 
-    private static void addData(DefaultTableModel model, JTable tablelog) {
+    private static void addDataLog(DefaultTableModel model, JTable tablelog) {
         for (int i = 0; i < Logs.size(); i++) {
             String name = Logs.get(i).getUsername();
             String action = Logs.get(i).getAcction();
@@ -170,8 +226,22 @@ public class FormServer extends JFrame {
 
     }
 
-    public static void start(JTable log) {
-        new Thread(new ServerHandler(log)).start();
+    private static void addDataUser(DefaultTableModel model, JTable tableuser) {
+        for (int i = 0; i < UserList.size(); i++) {
+            String name = UserList.get(i).getUsername();
+            String ip = UserList.get(i).getIpclient();
+
+            Object[] data = {name, ip};
+            model.addRow(data);
+        }
+
+        tableuser.setModel(model);
+        tableuser.setRowSelectionAllowed(true);
+
+    }
+
+    public static void start(JTable log, JTable user) {
+        new Thread(new ServerHandler(log, user)).start();
 
     }
 
@@ -185,13 +255,42 @@ public class FormServer extends JFrame {
         return port;
     }
 
+    private static class refeshTable implements Runnable {
+        public FormServer fserver;
+
+        public refeshTable(FormServer fserver) {
+            this.fserver = fserver;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    Thread.sleep(1000);
+                    EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            try {
+                               fserver.LoadTableServer();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Bug", Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     private static class ServerHandler implements Runnable {
         public JTable log;
+        public JTable user;
 
-
-        public ServerHandler(JTable log){
-            this.log=log;
-
+        public ServerHandler(JTable log, JTable user) {
+            this.log = log;
+            this.user = user;
         }
 
         @Override
@@ -200,7 +299,7 @@ public class FormServer extends JFrame {
                 server = new ServerSocket(PORT);
                 while (!exit) {
                     if (connectedClients.size() <= MAX_CONNECTED) {
-                        new Thread(new ClientHandler(server.accept(),log)).start();
+                        new Thread(new ClientHandler(server.accept(), log, user)).start();
                     }
                 }
             } catch (Exception e) {
@@ -208,129 +307,136 @@ public class FormServer extends JFrame {
             }
         }
     }
-
-
-
     // Start of Client Handler
     private static class ClientHandler implements Runnable {
         private Socket socket;
         private PrintWriter out;
         private BufferedReader in;
+        public AccountUser currentUser;
         public JTable log;
+        public JTable user;
+
         public String filelog = "ServerLogs.txt";
 
-        public ClientHandler(Socket socket,JTable log) {
-            this.log=log;
+        public ClientHandler(Socket socket, JTable log, JTable user) {
+            this.user = user;
+            this.log = log;
             this.socket = socket;
         }
 
-        public void LoadLogTable() {
-            DefaultTableModel model = new DefaultTableModel(null, columns);
-            FormServer.addData(model,log);
+        public void LoadTableServer() {
+            DefaultTableModel modellog = new DefaultTableModel(null, columnslog);
+            FormServer.addDataLog(modellog, log);
+
+            DefaultTableModel modeluser = new DefaultTableModel(null, columnsuser);
+            FormServer.addDataUser(modeluser, user);
 
         }
 
         @Override
         public void run() {
-            String name = "";
             //Xử Lí Thông tin Client
             try {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
                 String check;
-                Log temp=new Log("","","",LocalDateTime.now().format(dateFormat),"");
+                Log temp = new Log("", "", "", LocalDateTime.now().format(dateFormat), "");
                 while (true) {
                     check = in.readLine();
                     if (check.equals("Connect")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        currentUser=User;
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now().format(dateFormat), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
-                        name=User.getUsername();
+
                     }
-                    if(check.equals("Scanning")){
+                    if (check.equals("Scanning")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Scanning", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Scanning: " +des);
+                        temp = new Log(User.getUsername(), "Scanning", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Scanning: " + des);
                         Logs.add(temp);
                     }
 
-                    if(check.equals("Done")){
+                    if (check.equals("Done")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Done", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Done: " +des);
+                        temp = new Log(User.getUsername(), "Done", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Done: " + des);
                         Logs.add(temp);
                     }
 
-                    if(check.equals("Register")){
+                    if (check.equals("Register")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Register: " +des);
+                        temp = new Log(User.getUsername(), "Register", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Register: " + des);
                         Logs.add(temp);
                     }
 
-                    if(check.equals("Update")){
+                    if (check.equals("Update")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now().format(dateFormat),"Update: " +des);
+                        temp = new Log(User.getUsername(), "Update", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Update: " + des);
                         Logs.add(temp);
                     }
 
-                    if(check.equals("ENTRY_CREATE")){
+                    if (check.equals("ENTRY_CREATE")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Create", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Tạo mới: "+des);
+                        temp = new Log(User.getUsername(), "Create", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Tạo mới: " + des);
                         Logs.add(temp);
                     }
 
-                    if(check.equals("ENTRY_DELETE")){
+                    if (check.equals("ENTRY_DELETE")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Delete", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Xóa: "+des);
+                        temp = new Log(User.getUsername(), "Delete", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Xóa: " + des);
                         Logs.add(temp);
                     }
-                    if(check.equals("ENTRY_MODIFY")){
+                    if (check.equals("ENTRY_MODIFY")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        if(!User.CheckAccount(UserList,User)){
+                        if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         var des = in.readLine();
-                        temp = new Log(User.getUsername(), "Modify", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Chỉnh sửa: "+des);
+                        temp = new Log(User.getUsername(), "Modify", User.getIpclient(), LocalDateTime.now().format(dateFormat), "Chỉnh sửa: " + des);
                         Logs.add(temp);
                     }
-                    temp.writeFile(temp,filelog);
-                    LoadLogTable();
+                    temp.writeFile(temp, filelog);
+                    LoadTableServer();
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(), "Bug" ,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(), "Bug", JOptionPane.ERROR_MESSAGE);
                 System.out.println(e.getMessage());
             } finally {
-                if (name != null) {
-                    Log temp = new Log(name, "Logout", String.valueOf(socket.getInetAddress()) ,LocalDateTime.now().format(dateFormat), name + " Đăng Xuất");
+                if (currentUser.getUsername() != null) {
+                    Log temp = new Log(currentUser.getUsername(), "Logout", currentUser.getIpclient(), LocalDateTime.now().format(dateFormat), currentUser.getUsername() + " Đăng Xuất");
                     Logs.add(temp);
-                    UserList.remove(name);
+                    UserList.remove(currentUser);
+                    temp.writeFile(temp, filelog);
+                    LoadTableServer();
                 }
             }
+
         }
     }
 
@@ -339,5 +445,7 @@ public class FormServer extends JFrame {
     private JLabel lblChatServer;
     private JScrollPane scrollPane;
     private JButton btnStart;
+    private JScrollPane scrollPane1;
+    private JButton btnChangedir;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

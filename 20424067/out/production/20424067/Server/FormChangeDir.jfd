@@ -1,0 +1,40 @@
+JFDML JFormDesigner: "7.0.7.0.1134" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, comp lbPathdir:::p:110:p, space :::x, comp txtPathdir:::p:430:p, space :::p}, seq l {space :p:85:p, comp btnChange:::p::p, space :::x, comp btnExit:::p::p, space :p:74:p}, seq t {space :::x, comp lbInfo:::p:460:p, space :p:44:p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp lbInfo::::150:x, space :::p, par b {comp lbPathdir::b:p:38:p, comp txtPathdir::b:p::p}, space s:::p, par b {comp btnChange::b:p::p, comp btnExit::b:p::p}, space :p:34:p}}"
+		} ) {
+			name: "this"
+			"title": "ChangeDir"
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "txtPathdir"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lbPathdir"
+				"text": "PathDir"
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnChange"
+				"text": "Change"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnChange", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnExit"
+				"text": "Exit"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnExit", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lbInfo"
+				"horizontalAlignment": 2
+				"text": "text"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 5, 5 )
+			"size": new java.awt.Dimension( 560, 330 )
+		} )
+	}
+}

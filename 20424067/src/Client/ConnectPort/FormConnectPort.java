@@ -34,6 +34,7 @@ public class FormConnectPort extends JFrame {
     public BufferedReader in;
     public boolean isrunning;
     public LogDir logdir;
+    public String dirpath="D:/Test";
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -53,16 +54,15 @@ public class FormConnectPort extends JFrame {
     private void btnConnectActionPerformed(ActionEvent e) {
         start();
         if (isrunning) {
-            JOptionPane.showMessageDialog(this, "Success." + txtName.getText() + ":" + clientSocket.getInetAddress() + " " + clientSocket.getPort()+ " "+clientSocket.getLocalPort());
+            JOptionPane.showMessageDialog(this, "Success." + txtName.getText() + " " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()+ " "+clientSocket.getLocalPort());
             FormClient client = new FormClient();
             client.setVisible(true);
             this.setVisible(false);
-            //
             logdir= new LogDir(clientSocket);
             try {
-                Path dir = Paths.get("D:/Test");
-                var x = new Tracking(dir,true,logdir,txtName.getText());
-                new Thread(x).start();
+                Path dir = Paths.get(dirpath);
+                var track = new Tracking(dir,true,logdir,txtName.getText());
+                new Thread(track).start();
             }
             catch (Exception err)
             {
