@@ -1,0 +1,9 @@
+Server|Start|Port 1101|2022-08-16 15:39|Start Server
+Tan|Login|localhost/127.0.0.1:1101 62828|2022-08-16 15:39|Tan Đăng nhập
+Tan|Scanning|localhost/127.0.0.1:1101 62828|2022-08-16 15:39|Scanning: D:\Test
+Tan|Done|localhost/127.0.0.1:1101 62828|2022-08-16 15:39|Done: D:\Test
+Server|Start|Port 1101|2022-08-16 15:44|Start Server
+Tan|Login|localhost/127.0.0.1:1101 57142|2022-08-16 15:44|Tan Đăng nhập
+Tan|Scanning|localhost/127.0.0.1:1101 57142|2022-08-16 15:44|Scanning: D:\Test
+Tan|Done|localhost/127.0.0.1:1101 57142|2022-08-16 15:44|Done: D:\Test
+Server|Stop|Port 1101|2022-08-16 15:45|Stop Server

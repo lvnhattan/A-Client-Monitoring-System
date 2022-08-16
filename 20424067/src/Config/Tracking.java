@@ -62,6 +62,7 @@ public class Tracking implements Runnable {
     public Log temp;
     public String username;
     public DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    public Boolean isrunning=true;
 
     public Tracking(LogDir logdir) {
         this.logdir = logdir;
@@ -157,7 +158,7 @@ public class Tracking implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (isrunning) {
 
                 // wait for key to be signalled
                 WatchKey key;

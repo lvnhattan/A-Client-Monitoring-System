@@ -4,7 +4,6 @@
 
 package Server;
 
-import java.awt.event.*;
 import Config.User.AccountUser;
 import Config.User.Log;
 import me.alexpanov.net.FreePortFinder;
@@ -13,6 +12,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -37,6 +38,7 @@ public class FormServer extends JFrame {
     public static HashMap<String, PrintWriter> connectedClients = new HashMap<>();
     public static AccountUser selectUser;
     public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    public String pathDir = null;
     public String filelog = "ServerLogs.txt";
     public JTable tablelog;
     public JTable tableuser;
@@ -92,20 +94,20 @@ public class FormServer extends JFrame {
     }
 
     private void btnChangedir(ActionEvent e) {
-        if(selectUser!=null) {
+        if (selectUser != null) {
             FormChangeDir fchangedir = new FormChangeDir(selectUser);
             fchangedir.setVisible(true);
         }
         btnChangedir.setEnabled(false);
+        //add logs nếu cần
     }
 
     private void tableuserMouseClicked(MouseEvent e) {
         int selectedRow = tableuser.getSelectedRow();
-        selectUser = new AccountUser((String) tableuser.getValueAt(selectedRow,0),(String) tableuser.getValueAt(selectedRow,1));
+        selectUser = new AccountUser((String) tableuser.getValueAt(selectedRow, 0), (String) tableuser.getValueAt(selectedRow, 1));
         System.out.println("Selected: " + selectUser.getUsername() + " " + selectUser.getIpclient());
-        if(selectUser!=null)
-        {
-            btnChangedir.setText("Change Directory: "+selectUser.getUsername() + " " + selectUser.getIpclient());
+        if (selectUser != null) {
+            btnChangedir.setText("Change Directory: " + selectUser.getUsername() + " " + selectUser.getIpclient());
             btnChangedir.setEnabled(true);
         }
     }
@@ -161,34 +163,34 @@ public class FormServer extends JFrame {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(lblChatServer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(btnChangedir, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(btnStart, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
-                                .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE))))
-                    .addContainerGap())
+                                .addContainerGap()
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(lblChatServer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(btnChangedir, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                        .addComponent(btnStart, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
+                                                        .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE))))
+                                .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addComponent(lblChatServer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnStart, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                        .addComponent(btnChangedir, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                    .addGap(20, 20, 20))
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addComponent(lblChatServer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(btnStart, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                                        .addComponent(btnChangedir, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                                .addGap(20, 20, 20))
         );
         setSize(1160, 595);
         setLocationRelativeTo(getOwner());
@@ -270,7 +272,7 @@ public class FormServer extends JFrame {
                     EventQueue.invokeLater(new Runnable() {
                         public void run() {
                             try {
-                               fserver.LoadTableServer();
+                                fserver.LoadTableServer();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -307,6 +309,7 @@ public class FormServer extends JFrame {
             }
         }
     }
+
     // Start of Client Handler
     private static class ClientHandler implements Runnable {
         private Socket socket;
@@ -345,7 +348,7 @@ public class FormServer extends JFrame {
                     check = in.readLine();
                     if (check.equals("Connect")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
-                        currentUser=User;
+                        currentUser = User;
                         if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }

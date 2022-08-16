@@ -1,0 +1,4 @@
+Tan Scanning Socket[addr=localhost/127.0.0.1,port=1101,localport=62828] 2022-08-16 15:39 Scanning: D:\Test
+Tan Done Socket[addr=localhost/127.0.0.1,port=1101,localport=62828] 2022-08-16 15:39 Done: D:\Test
+Tan Scanning Socket[addr=localhost/127.0.0.1,port=1101,localport=57142] 2022-08-16 15:44 Scanning: D:\Test
+Tan Done Socket[addr=localhost/127.0.0.1,port=1101,localport=57142] 2022-08-16 15:44 Done: D:\Test

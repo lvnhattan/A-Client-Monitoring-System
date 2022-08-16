@@ -14,23 +14,25 @@ import javax.swing.GroupLayout;
  * @author unknown
  */
 public class FormChangeDir extends JFrame {
-
+    FormServer formServer = new FormServer();
     AccountUser user;
     String defaultPath="D:/Test";
 
     public FormChangeDir(AccountUser user) {
         initComponents();
         this.user=user;
-        lbInfo.setText("UserName: "+user.getUsername()+"\n"+"IpClient: "+user.getIpclient()+"\n");
+        lbInfo.setText("UserName: "+user.getUsername()+"\n IpClient: "+user.getIpclient());
         txtPathdir.setText(defaultPath);
     }
 
     private void btnChange(ActionEvent e) {
-
+       formServer.pathDir=txtPathdir.getText();
+       System.out.println(txtPathdir.getText());
+       this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     private void btnExit(ActionEvent e) {
-        // TODO add your code here
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
 
@@ -49,7 +51,7 @@ public class FormChangeDir extends JFrame {
         var contentPane = getContentPane();
 
         //---- lbPathdir ----
-        lbPathdir.setText("PathDir");
+        lbPathdir.setText("Path Directory");
         lbPathdir.setHorizontalAlignment(SwingConstants.CENTER);
 
         //---- btnChange ----
@@ -70,35 +72,34 @@ public class FormChangeDir extends JFrame {
             contentPaneLayout.createParallelGroup()
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(lbPathdir, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtPathdir, GroupLayout.PREFERRED_SIZE, 430, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(85, 85, 85)
-                    .addComponent(btnChange)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnExit)
-                    .addGap(74, 74, 74))
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbInfo, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
-                    .addGap(44, 44, 44))
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(lbInfo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(lbPathdir, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtPathdir, GroupLayout.PREFERRED_SIZE, 381, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addComponent(btnChange, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(12, 12, 12)))))
+                    .addGap(49, 49, 49))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(lbInfo, GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(lbInfo, GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(lbPathdir, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtPathdir, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGap(18, 18, 18)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnChange)
-                        .addComponent(btnExit))
-                    .addGap(34, 34, 34))
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnChange, GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+                        .addComponent(btnExit, GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
+                    .addGap(17, 17, 17))
         );
         pack();
         setLocationRelativeTo(getOwner());
