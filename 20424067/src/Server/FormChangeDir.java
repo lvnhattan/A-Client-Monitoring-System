@@ -5,7 +5,15 @@
 package Server;
 
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 import Config.User.AccountUser;
+import Config.User.Log;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -14,28 +22,44 @@ import javax.swing.GroupLayout;
  * @author unknown
  */
 public class FormChangeDir extends JFrame {
-    FormServer formServer = new FormServer();
     AccountUser user;
+    ArrayList<AccountUser> list;
     String defaultPath="D:/Test";
 
-    public FormChangeDir(AccountUser user) {
+    public FormChangeDir(ArrayList<AccountUser> list, AccountUser user) {
         initComponents();
         this.user=user;
+        this.list=list;
         lbInfo.setText("UserName: "+user.getUsername()+"\n IpClient: "+user.getIpclient());
-        txtPathdir.setText(defaultPath);
+        txtPathdir.setText(user.getPathdir());
     }
 
     private void btnChange(ActionEvent e) {
-       formServer.pathDir=txtPathdir.getText();
-       System.out.println(txtPathdir.getText());
-       this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-    }
+        user.Pathdir = txtPathdir.getText();
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getUsername().equals(user.getUsername()) & list.get(i).getIpclient().equals(user.getIpclient())) {
+                    list.get(i).Pathdir = user.Pathdir;
+                    try {
+                        PrintWriter out = new PrintWriter(list.get(i).socket.getOutputStream(), true);
+                        out.println("DirChange");
+                        out.println(user.getUsername());
+                        out.println(user.getIpclient());
+                        out.println(user.getPathdir());
+                        System.out.println(list.get(i).getUsername() + " " + list.get(i).getIpclient() + " " + list.get(i).getPathdir());
 
+                    }catch (Exception ex) {
+                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), ex.getMessage(), "Bug", JOptionPane.ERROR_MESSAGE);
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        }
+    }
     private void btnExit(ActionEvent e) {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
-
-
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents

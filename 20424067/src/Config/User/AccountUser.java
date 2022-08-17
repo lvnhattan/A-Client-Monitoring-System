@@ -1,15 +1,19 @@
 package Config.User;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class AccountUser {
     private String Username;
     private String Ipclient;
+    public String Pathdir;
+    public Socket socket;
 
 
     public AccountUser(String username, String ipclient) {
         Username = username;
         Ipclient = ipclient;
+        Pathdir = "D:/Test";
     }
 
     public String getUsername() {
@@ -18,6 +22,10 @@ public class AccountUser {
 
     public String getIpclient() {
         return Ipclient;
+    }
+
+    public String getPathdir() {
+        return Pathdir;
     }
 
     public boolean CheckAccount(ArrayList<AccountUser> list, AccountUser user) {

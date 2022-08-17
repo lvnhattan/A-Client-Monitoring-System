@@ -167,7 +167,9 @@ public class Tracking implements Runnable {
                 } catch (InterruptedException x) {
                     return;
                 }
-
+                if (!isrunning){
+                    return;
+                }
                 Path dir = keys.get(key);
                 if (dir == null) {
                     System.err.println("WatchKey not recognized!!");
@@ -233,8 +235,4 @@ public class Tracking implements Runnable {
         }
     }
 }
-/*    static void usage() {
-        System.err.println("usage: java Tracking [-r] dir");
-        System.exit(-1);
-    }*/
 

@@ -8,6 +8,7 @@ package Client.ConnectPort;
 import Config.LogDir;
 import Client.Main.FormClient;
 import Config.Tracking;
+import Config.User.AccountUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,8 +34,9 @@ public class FormConnectPort extends JFrame {
     public PrintWriter out;
     public BufferedReader in;
     public boolean isrunning;
-    public LogDir logdir;
-    public String dirpath="D:/Test";
+    public AccountUser user;
+//    public LogDir logdir;
+//    public Tracking track;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -55,14 +57,14 @@ public class FormConnectPort extends JFrame {
         start();
         if (isrunning) {
             JOptionPane.showMessageDialog(this, "Success." + txtName.getText() + " " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()+ " "+clientSocket.getLocalPort());
-            FormClient client = new FormClient();
+//            logdir= new LogDir(clientSocket);
+            FormClient client = new FormClient(clientSocket,user);
             client.setVisible(true);
             this.setVisible(false);
-            logdir= new LogDir(clientSocket);
             try {
-                Path dir = Paths.get(dirpath);
-                var track = new Tracking(dir,true,logdir,txtName.getText());
-                new Thread(track).start();
+//                Path dir = Paths.get(dirpath);
+//                track = new Tracking(dir,true,logdir,txtName.getText());
+//                new Thread(track).start();
             }
             catch (Exception err)
             {
@@ -81,9 +83,13 @@ public class FormConnectPort extends JFrame {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 isrunning = true;
 
+                user= new AccountUser(txtName.getText(),clientSocket.getInetAddress() + ":" + clientSocket.getPort()+" "+clientSocket.getLocalPort());
+                user.socket=clientSocket;
+
                 out.println("Connect");
                 out.println(txtName.getText());
                 out.println(clientSocket.getInetAddress() + ":" + clientSocket.getPort()+" "+clientSocket.getLocalPort());
+
 
             } catch (Exception err) {
                 System.out.println("[ERROR] " + err.getLocalizedMessage());

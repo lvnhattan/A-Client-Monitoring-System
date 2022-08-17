@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, comp btnStart:::p:144:p, space ::258:x}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp btnStart:::p::p, space ::211:x}}"
+			"$horizontalGroup": "par l {seq {space ::7:x, par l {comp btnStart::t:p:144:p, comp scrollPane1::t:p:695:p}, space :::p}}"
+			"$verticalGroup": "par l {seq t {comp scrollPane1::::285:x, space :::p, comp btnStart:::p::p, space :::p}}"
 		} ) {
 			name: "this"
 			"title": "Client"
@@ -14,9 +14,15 @@ new FormModel {
 				"text": "Start"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnStart", true ) )
 			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tablelog"
+				} )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 410, 295 )
+			"size": new java.awt.Dimension( 710, 375 )
 		} )
 	}
 }

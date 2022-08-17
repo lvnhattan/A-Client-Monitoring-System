@@ -38,14 +38,13 @@ public class FormServer extends JFrame {
     public static HashMap<String, PrintWriter> connectedClients = new HashMap<>();
     public static AccountUser selectUser;
     public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    public String pathDir = null;
     public String filelog = "ServerLogs.txt";
     public JTable tablelog;
     public JTable tableuser;
     public DefaultTableModel modellog;
     public DefaultTableModel modeluser;
     private static String[] columnslog = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
-    private static String[] columnsuser = {"Username", "Ipclient"};
+    private static String[] columnsuser = {"Username", "Ipclient","Path"};
 
     public FormServer() {
         initComponents();
@@ -95,17 +94,20 @@ public class FormServer extends JFrame {
 
     private void btnChangedir(ActionEvent e) {
         if (selectUser != null) {
-            FormChangeDir fchangedir = new FormChangeDir(selectUser);
+            FormChangeDir fchangedir = new FormChangeDir(UserList,selectUser);
             fchangedir.setVisible(true);
         }
         btnChangedir.setEnabled(false);
-        //add logs nếu cần
+        btnChangedir.setText("Change Directory");
+        System.out.println(selectUser.getUsername()+ " "+ selectUser.getIpclient()+" "+selectUser.getPathdir());
+        LoadTableServer();
     }
 
     private void tableuserMouseClicked(MouseEvent e) {
         int selectedRow = tableuser.getSelectedRow();
         selectUser = new AccountUser((String) tableuser.getValueAt(selectedRow, 0), (String) tableuser.getValueAt(selectedRow, 1));
-        System.out.println("Selected: " + selectUser.getUsername() + " " + selectUser.getIpclient());
+        selectUser.Pathdir=(String) tableuser.getValueAt(selectedRow, 2);
+        System.out.println("Selected: " + selectUser.getUsername() + " " + selectUser.getIpclient()+ " "+selectUser.getPathdir());
         if (selectUser != null) {
             btnChangedir.setText("Change Directory: " + selectUser.getUsername() + " " + selectUser.getIpclient());
             btnChangedir.setEnabled(true);
@@ -232,8 +234,9 @@ public class FormServer extends JFrame {
         for (int i = 0; i < UserList.size(); i++) {
             String name = UserList.get(i).getUsername();
             String ip = UserList.get(i).getIpclient();
+            String path = UserList.get(i).getPathdir();
 
-            Object[] data = {name, ip};
+            Object[] data = {name,ip,path};
             model.addRow(data);
         }
 
@@ -244,7 +247,6 @@ public class FormServer extends JFrame {
 
     public static void start(JTable log, JTable user) {
         new Thread(new ServerHandler(log, user)).start();
-
     }
 
    /* public static void stop() throws IOException {
@@ -318,7 +320,6 @@ public class FormServer extends JFrame {
         public AccountUser currentUser;
         public JTable log;
         public JTable user;
-
         public String filelog = "ServerLogs.txt";
 
         public ClientHandler(Socket socket, JTable log, JTable user) {
@@ -348,12 +349,17 @@ public class FormServer extends JFrame {
                     check = in.readLine();
                     if (check.equals("Connect")) {
                         var User = new AccountUser(in.readLine(), in.readLine());
+                        User.socket=socket;
                         currentUser = User;
                         if (!User.CheckAccount(UserList, User)) {
                             UserList.add(User);
                         }
                         temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now().format(dateFormat), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
+//                        for(int i=0;i<Logs.size();i++)
+//                        {
+//                            System.out.println(Logs.get(i).getUsername()+Logs.get(i).getAcction()+Logs.get(i).getTime());
+//                        }
 
                     }
                     if (check.equals("Scanning")) {
