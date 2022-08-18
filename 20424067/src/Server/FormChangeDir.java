@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import Config.User.AccountUser;
@@ -22,12 +23,15 @@ import javax.swing.GroupLayout;
  * @author unknown
  */
 public class FormChangeDir extends JFrame {
-    AccountUser user;
-    ArrayList<AccountUser> list;
-    String defaultPath="D:/Test";
+    public AccountUser user;
+    public ArrayList<Log> Logs = new ArrayList<>();
+    public ArrayList<AccountUser> list;
+    public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private String defaultPath="D:/Test";
 
-    public FormChangeDir(ArrayList<AccountUser> list, AccountUser user) {
+    public FormChangeDir(ArrayList<AccountUser> list, AccountUser user,ArrayList<Log> Logs) {
         initComponents();
+        this.Logs=Logs;
         this.user=user;
         this.list=list;
         lbInfo.setText("UserName: "+user.getUsername()+"\n IpClient: "+user.getIpclient());
@@ -46,6 +50,8 @@ public class FormChangeDir extends JFrame {
                         out.println(user.getUsername());
                         out.println(user.getIpclient());
                         out.println(user.getPathdir());
+                        Log temp=new Log(user.getUsername(),"Change Directory",user.getIpclient(),LocalDateTime.now().format(dateFormat),"Đổi thư mục theo dõi: "+user.getPathdir());
+                        Logs.add(temp);
                         System.out.println(list.get(i).getUsername() + " " + list.get(i).getIpclient() + " " + list.get(i).getPathdir());
 
                     }catch (Exception ex) {

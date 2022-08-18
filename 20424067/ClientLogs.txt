@@ -1,0 +1,14 @@
+Tan Scanning localhost/127.0.0.1:1101 56881 2022-08-18 11:47 Scanning: D:\Test
+Tan Done localhost/127.0.0.1:1101 56881 2022-08-18 11:47 Done: D:\Test
+Tan Scanning localhost/127.0.0.1:1101 56881 2022-08-18 11:48 Scanning: D:\Test\ABC
+Tan Done localhost/127.0.0.1:1101 56881 2022-08-18 11:48 Done: D:\Test\ABC
+Tan Scanning localhost/127.0.0.1:1101 56913 2022-08-18 11:54 Scanning: D:\Test
+Tan Done localhost/127.0.0.1:1101 56913 2022-08-18 11:54 Done: D:\Test
+Tan Scanning localhost/127.0.0.1:1101 56913 2022-08-18 11:54 Scanning: D:\Test\ABC
+Tan Done localhost/127.0.0.1:1101 56913 2022-08-18 11:54 Done: D:\Test\ABC
+TAn Scanning localhost/127.0.0.1:1101 56940 2022-08-18 11:56 Scanning: D:\Test
+TAn Done localhost/127.0.0.1:1101 56940 2022-08-18 11:56 Done: D:\Test
+Tan Scanning localhost/127.0.0.1:1101 53555 2022-08-18 11:59 Scanning: D:\Test
+Tan Done localhost/127.0.0.1:1101 53555 2022-08-18 11:59 Done: D:\Test
+Tan Scanning localhost/127.0.0.1:1101 53555 2022-08-18 11:59 Scanning: D:\Test\ABC
+Tan Done localhost/127.0.0.1:1101 53555 2022-08-18 11:59 Done: D:\Test\ABC

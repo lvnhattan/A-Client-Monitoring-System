@@ -94,7 +94,7 @@ public class FormServer extends JFrame {
 
     private void btnChangedir(ActionEvent e) {
         if (selectUser != null) {
-            FormChangeDir fchangedir = new FormChangeDir(UserList,selectUser);
+            FormChangeDir fchangedir = new FormChangeDir(UserList,selectUser,Logs);
             fchangedir.setVisible(true);
         }
         btnChangedir.setEnabled(false);

@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -91,10 +93,10 @@ public class FormClient extends JFrame {
         private static String[] columnslog = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
 
 
-        public refeshTable(ArrayList<Log> logs,Tracking track,JTable tablelog) {
-            this.Logs=logs;
-            this.track=track;
-            this.tablelog=tablelog;
+        public refeshTable(ArrayList<Log> logs, Tracking track, JTable tablelog) {
+            this.Logs = logs;
+            this.track = track;
+            this.tablelog = tablelog;
         }
 
         public void LoadTableClient() {
@@ -128,7 +130,7 @@ public class FormClient extends JFrame {
                     EventQueue.invokeLater(new Runnable() {
                         public void run() {
                             try {
-                                Logs=track.userlogs;
+                                Logs = track.userlogs;
                                 LoadTableClient();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -170,6 +172,7 @@ public class FormClient extends JFrame {
         public static ArrayList<Log> Logs;
         public DefaultTableModel modellog;
         private static String[] columnslog = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
+        private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         public Listener(Socket socket, AccountUser user, JTable tablelog, ArrayList<Log> Logs) {
             this.Logs = Logs;
@@ -178,6 +181,28 @@ public class FormClient extends JFrame {
             this.user = user;
         }
 
+        public void LoadTableClient() {
+            modellog = new DefaultTableModel(null, columnslog);
+            addDataLog(modellog, tablelog, Logs);
+        }
+
+        public static void addDataLog(DefaultTableModel model, JTable tablelog, ArrayList<Log> Logs) {
+
+            for (int i = 0; i < Logs.size(); i++) {
+                String name = Logs.get(i).getUsername();
+                String action = Logs.get(i).getAcction();
+                String ip = Logs.get(i).getIpclient();
+                String time = Logs.get(i).getTime();
+                String des = Logs.get(i).getDescription();
+
+                Object[] data = {name, action, ip, time, des};
+                model.addRow(data);
+            }
+
+            tablelog.setModel(model);
+            tablelog.setRowSelectionAllowed(true);
+
+        }
 
         @Override
         public void run() {
@@ -190,7 +215,7 @@ public class FormClient extends JFrame {
                 logdir = new LogDir(socket);
                 track = new Tracking(Paths.get(user.Pathdir), true, logdir, user.getUsername());
                 new Thread(track).start();
-                new Thread(new refeshTable(Logs,track,tablelog)).start();
+                new Thread(new refeshTable(Logs, track, tablelog)).start();
 
                 while (true) {
                     String check = in.readLine();
@@ -198,10 +223,13 @@ public class FormClient extends JFrame {
                         user = new AccountUser(in.readLine(), in.readLine());
                         user.Pathdir = in.readLine();
                         track.isrunning = false;
+                        Log temp = new Log(user.getUsername(), "Change Directory", user.getIpclient(), LocalDateTime.now().format(dateFormat), "Đổi thư mục theo dõi: " + user.getPathdir());
+                        track.userlogs.add(temp);
                         logdir = new LogDir(socket);
                         track = new Tracking(Paths.get(user.Pathdir), true, logdir, user.getUsername());
                         new Thread(track).start();
-//                        System.out.println(Paths.get(user.Pathdir) + user.getUsername() + user.getIpclient());
+
+                        LoadTableClient();
                     }
                 }
 
