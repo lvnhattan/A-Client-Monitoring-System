@@ -31,8 +31,9 @@ package Config;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Client.Main.FormClient;
+import Config.User.AccountUser;
 import Config.User.Log;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.*;
@@ -64,6 +65,7 @@ public class Tracking implements Runnable {
     public DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public Boolean isrunning=true;
 
+
     public Tracking(LogDir logdir) {
         this.logdir = logdir;
     }
@@ -83,7 +85,7 @@ public class Tracking implements Runnable {
             if (prev == null) {
                 System.out.format("Register: %s\n", dir);
                 logdir.sendMess("Register");
-                temp = new Log(username, "Register", String.valueOf(logdir.getSocket()), LocalDateTime.now().format(dateFormat), "Register " + String.valueOf(dir));
+                temp = new Log(username, "Register", logdir.getSocket().getInetAddress() + ":" + logdir.getSocket().getPort() + " " + logdir.getSocket().getLocalPort(), LocalDateTime.now().format(dateFormat), "Register " + String.valueOf(dir));
                 userlogs.add(temp);
                 logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
                 logdir.writeFile(temp,filelog);
@@ -92,7 +94,7 @@ public class Tracking implements Runnable {
                 if (!dir.equals(prev)) {
                     System.out.format("Update: %s -> %s\n", prev, dir);
                     logdir.sendMess("Update");
-                    temp = new Log(username, "Update", String.valueOf(logdir.getSocket()), LocalDateTime.now().format(dateFormat), "Update: " + String.valueOf(prev) + " -> " + String.valueOf(dir));
+                    temp = new Log(username, "Update", logdir.getSocket().getInetAddress() + ":" + logdir.getSocket().getPort() + " " + logdir.getSocket().getLocalPort(), LocalDateTime.now().format(dateFormat), "Update: " + String.valueOf(prev) + " -> " + String.valueOf(dir));
                     userlogs.add(temp);
                     logdir.sendPack(username, logdir.getSocket(), String.valueOf(prev) + " -> " + String.valueOf(dir));
                     logdir.writeFile(temp,filelog);
@@ -131,15 +133,14 @@ public class Tracking implements Runnable {
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
             logdir.sendMess("Scanning");
-            temp = new Log(username, "Scanning", String.valueOf(logdir.getSocket()), LocalDateTime.now().format(dateFormat), "Scanning: " + String.valueOf(dir));
+            temp = new Log(username, "Scanning", logdir.getSocket().getInetAddress() + ":" + logdir.getSocket().getPort() + " " + logdir.getSocket().getLocalPort(), LocalDateTime.now().format(dateFormat), "Scanning: " + String.valueOf(dir));
             userlogs.add(temp);
             logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
             logdir.writeFile(temp,filelog);
             registerAll(dir);
-
             System.out.println("Done");
             logdir.sendMess("Done");
-            temp = new Log(username, "Done", String.valueOf(logdir.getSocket()), LocalDateTime.now().format(dateFormat), "Done: " + String.valueOf(dir));
+            temp = new Log(username, "Done", logdir.getSocket().getInetAddress() + ":" + logdir.getSocket().getPort() + " " + logdir.getSocket().getLocalPort(), LocalDateTime.now().format(dateFormat), "Done: " + String.valueOf(dir));
             userlogs.add(temp);
             logdir.sendPack(username, logdir.getSocket(), String.valueOf(dir));
             logdir.writeFile(temp,filelog);
@@ -200,7 +201,7 @@ public class Tracking implements Runnable {
                     } else if (event.kind().name().equals(ENTRY_MODIFY.name())) {
                         acction = "Modify";
                     }
-                    temp = new Log(username, acction, String.valueOf(logdir.getSocket()), LocalDateTime.now().format(dateFormat), acction + " " + String.valueOf(child));
+                    temp = new Log(username, acction, logdir.getSocket().getInetAddress() + ":" + logdir.getSocket().getPort() + " " + logdir.getSocket().getLocalPort(), LocalDateTime.now().format(dateFormat), acction + " " + String.valueOf(child));
                     userlogs.add(temp);
                     logdir.sendPack(username, logdir.getSocket(), String.valueOf(child));
                     logdir.writeFile(temp,filelog);

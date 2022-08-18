@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 			"$horizontalGroup": "par l {seq {space ::7:x, par l {comp btnStart::t:p:144:p, comp scrollPane1::t:p:695:p}, space :::p}}"
-			"$verticalGroup": "par l {seq t {comp scrollPane1::::285:x, space :::p, comp btnStart:::p::p, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::279:x, space :::p, comp btnStart:::p::p, space :::p}}"
 		} ) {
 			name: "this"
 			"title": "Client"

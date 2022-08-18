@@ -356,10 +356,6 @@ public class FormServer extends JFrame {
                         }
                         temp = new Log(User.getUsername(), "Login", User.getIpclient(), LocalDateTime.now().format(dateFormat), User.getUsername() + " Đăng nhập");
                         Logs.add(temp);
-//                        for(int i=0;i<Logs.size();i++)
-//                        {
-//                            System.out.println(Logs.get(i).getUsername()+Logs.get(i).getAcction()+Logs.get(i).getTime());
-//                        }
 
                     }
                     if (check.equals("Scanning")) {
