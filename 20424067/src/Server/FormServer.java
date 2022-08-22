@@ -61,6 +61,9 @@ public class FormServer extends JFrame {
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
                     SwingUtilities.updateComponentTreeUI(frame);
                     frame.setVisible(true);
+                    frame.revalidate();
+                    frame.pack();
+                    frame.repaint();
                     new Thread(new refeshTable(frame)).start();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -249,10 +252,6 @@ public class FormServer extends JFrame {
         new Thread(new ServerHandler(log, user)).start();
     }
 
-   /* public static void stop() throws IOException {
-        if (!server.isClosed()) server.close();
-    }*/
-
     private static int getRandomPort() {
         int port = FreePortFinder.findFreeLocalPort();
         PORT = port;
@@ -430,7 +429,7 @@ public class FormServer extends JFrame {
                     LoadTableServer();
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(), "Bug", JOptionPane.ERROR_MESSAGE);
+                //JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(), "Bug", JOptionPane.ERROR_MESSAGE);
                 System.out.println(e.getMessage());
             } finally {
                 if (currentUser.getUsername() != null) {

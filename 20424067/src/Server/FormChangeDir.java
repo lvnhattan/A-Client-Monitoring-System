@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import Config.LogDir;
 import Config.User.AccountUser;
 import Config.User.Log;
 
@@ -27,7 +28,7 @@ public class FormChangeDir extends JFrame {
     public ArrayList<Log> Logs = new ArrayList<>();
     public ArrayList<AccountUser> list;
     public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private String defaultPath="D:/Test";
+    public String filelog = "ServerLogs.txt";
 
     public FormChangeDir(ArrayList<AccountUser> list, AccountUser user,ArrayList<Log> Logs) {
         initComponents();
@@ -52,6 +53,7 @@ public class FormChangeDir extends JFrame {
                         out.println(user.getPathdir());
                         Log temp=new Log(user.getUsername(),"Change Directory",user.getIpclient(),LocalDateTime.now().format(dateFormat),"Đổi thư mục theo dõi: "+user.getPathdir());
                         Logs.add(temp);
+                        temp.writeFile(temp,filelog);
                         System.out.println(list.get(i).getUsername() + " " + list.get(i).getIpclient() + " " + list.get(i).getPathdir());
 
                     }catch (Exception ex) {
@@ -79,6 +81,7 @@ public class FormChangeDir extends JFrame {
         //======== this ========
         setTitle("ChangeDir");
         var contentPane = getContentPane();
+        setResizable(false);
 
         //---- lbPathdir ----
         lbPathdir.setText("Path Directory");

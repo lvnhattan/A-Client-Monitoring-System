@@ -12,7 +12,6 @@ import Config.User.Log;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,7 +52,7 @@ public class FormClient extends JFrame {
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 //                    SwingUtilities.updateComponentTreeUI(frame);
 //                    frame.setVisible(true);
-                    //new Thread(new refeshTable(frame)).start();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -105,7 +104,6 @@ public class FormClient extends JFrame {
         }
 
         public static void addDataLog(DefaultTableModel model, JTable tablelog, ArrayList<Log> Logs) {
-
             for (int i = 0; i < Logs.size(); i++) {
                 String name = Logs.get(i).getUsername();
                 String action = Logs.get(i).getAcction();
@@ -150,16 +148,12 @@ public class FormClient extends JFrame {
         try {
             Listener listen = new Listener(clientSocket, user, tablelog, Logs);
             new Thread(listen).start();
-            //new Thread(new Listener(clientSocket,user,tablelog)).start();
-
 
         } catch (Exception err) {
             System.out.println("[ERROR] " + err.getLocalizedMessage());
         }
     }
 
-    private void btnStart(ActionEvent e) {
-    }
 
     public static class Listener implements Runnable {
         public JTable tablelog;
@@ -173,6 +167,7 @@ public class FormClient extends JFrame {
         public DefaultTableModel modellog;
         private static String[] columnslog = {"Username", "Acction", "Ipclient", "Datetime", "Description"};
         private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        private String filelog = "ClientLogs.txt" ;
 
         public Listener(Socket socket, AccountUser user, JTable tablelog, ArrayList<Log> Logs) {
             this.Logs = Logs;
@@ -206,8 +201,6 @@ public class FormClient extends JFrame {
 
         @Override
         public void run() {
-            //userlogs = new ArrayList<>(Tracking.userlogs);
-            //new Thread(new refeshTable(frame,track)).start();
 
             try {
                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -225,6 +218,7 @@ public class FormClient extends JFrame {
                         track.isrunning = false;
                         Log temp = new Log(user.getUsername(), "Change Directory", user.getIpclient(), LocalDateTime.now().format(dateFormat), "Đổi thư mục theo dõi: " + user.getPathdir());
                         track.userlogs.add(temp);
+                        temp.writeFile(temp,filelog);
                         logdir = new LogDir(socket);
                         track = new Tracking(Paths.get(user.Pathdir), true, logdir, user.getUsername());
                         new Thread(track).start();
@@ -249,6 +243,8 @@ public class FormClient extends JFrame {
         //======== this ========
         setTitle("Client");
         var contentPane = getContentPane();
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         //======== scrollPane1 ========
         {
@@ -260,7 +256,7 @@ public class FormClient extends JFrame {
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(7, Short.MAX_VALUE)
+                    .addGap(7, 7, 7)
                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 695, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
         );
@@ -268,7 +264,7 @@ public class FormClient extends JFrame {
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
         );
         pack();
