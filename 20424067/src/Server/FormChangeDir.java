@@ -21,7 +21,7 @@ import javax.swing.*;
 import javax.swing.GroupLayout;
 
 /**
- * @author unknown
+ * @author nhat tan
  */
 public class FormChangeDir extends JFrame {
     public AccountUser user;

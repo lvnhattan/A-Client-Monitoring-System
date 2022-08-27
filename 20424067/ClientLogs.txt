@@ -1,0 +1,17 @@
+Tan Scanning localhost/127.0.0.1:1101 61122 2022-08-27 21:24 Scanning: C:\ClientMonitoringSystem\Data
+Tan Done localhost/127.0.0.1:1101 61122 2022-08-27 21:24 Done: C:\ClientMonitoringSystem\Data
+Long Scanning localhost/127.0.0.1:1101 61123 2022-08-27 21:24 Scanning: C:\ClientMonitoringSystem\Data
+Long Done localhost/127.0.0.1:1101 61123 2022-08-27 21:24 Done: C:\ClientMonitoringSystem\Data
+Tan|Change Directory|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Đổi thư mục theo dõi: C:/ClientMonitoringSystem/Data/BT1
+Tan Scanning localhost/127.0.0.1:1101 61122 2022-08-27 21:24 Scanning: C:\ClientMonitoringSystem\Data\BT1
+Tan Done localhost/127.0.0.1:1101 61122 2022-08-27 21:24 Done: C:\ClientMonitoringSystem\Data\BT1
+Long|Change Directory|localhost/127.0.0.1:1101 61123|2022-08-27 21:25|Đổi thư mục theo dõi: C:/ClientMonitoringSystem/Data/BT2
+Long Scanning localhost/127.0.0.1:1101 61123 2022-08-27 21:25 Scanning: C:\ClientMonitoringSystem\Data\BT2
+Long Done localhost/127.0.0.1:1101 61123 2022-08-27 21:25 Done: C:\ClientMonitoringSystem\Data\BT2
+Tan Create localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Create C:\ClientMonitoringSystem\Data\BT1\New folder
+Tan Register localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Register C:\ClientMonitoringSystem\Data\BT1\New folder
+Tan Delete localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Delete C:\ClientMonitoringSystem\Data\BT1\New folder
+Tan Create localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Create C:\ClientMonitoringSystem\Data\BT1\XYZ
+Tan Update localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Update: C:\ClientMonitoringSystem\Data\BT1\New folder -> C:\ClientMonitoringSystem\Data\BT1\XYZ
+Tan Modify localhost/127.0.0.1:1101 61122 2022-08-27 21:26 Modify C:\ClientMonitoringSystem\Data\BT1\New Text Document.txt
+Long Delete localhost/127.0.0.1:1101 61123 2022-08-27 21:26 Delete C:\ClientMonitoringSystem\Data\BT2\Tan

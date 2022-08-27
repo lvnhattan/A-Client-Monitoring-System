@@ -13,7 +13,7 @@ public class AccountUser {
     public AccountUser(String username, String ipclient) {
         Username = username;
         Ipclient = ipclient;
-        Pathdir = "D:/Test";
+        Pathdir = "C:/ClientMonitoringSystem/Data";
     }
 
     public String getUsername() {

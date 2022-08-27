@@ -1,0 +1,33 @@
+Server|Start|Port 1101|2022-08-27 20:46|Start Server
+NhatTan|Login|localhost/127.0.0.1:1101 60840|2022-08-27 20:46|NhatTan Đăng nhập
+NhatTan|Scanning|localhost/127.0.0.1:1101 60840|2022-08-27 20:46|Scanning: C:\ClientMonitoringSystem\Data
+NhatTan|Update|localhost/127.0.0.1:1101 60840|2022-08-27 20:47|Update: C:\ClientMonitoringSystem\Data\BTCN -> C:\ClientMonitoringSystem\Data\NhatTan
+GiaHuy|Update|localhost/127.0.0.1:1101 60841|2022-08-27 20:47|Update: C:\ClientMonitoringSystem\Data\BTCN -> C:\ClientMonitoringSystem\Data\NhatTan
+NhatTan|Change Directory|localhost/127.0.0.1:1101 60840|2022-08-27 20:47|Đổi thư mục theo dõi: C:/ClientMonitoringSystem/Data/NhatTan
+NhatTan|Scanning|localhost/127.0.0.1:1101 60840|2022-08-27 20:47|Scanning: C:\ClientMonitoringSystem\Data\NhatTan
+GiaHuy|Logout|localhost/127.0.0.1:1101 60841|2022-08-27 20:49|GiaHuy Đăng Xuất
+NhatTan|Logout|localhost/127.0.0.1:1101 60840|2022-08-27 20:49|NhatTan Đăng Xuất
+Server|Stop|Port 1101|2022-08-27 20:49|Stop Server
+Server|Start|Port 1101|2022-08-27 21:23|Start Server
+Tan|Login|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Tan Đăng nhập
+Tan|Scanning|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Scanning: C:\ClientMonitoringSystem\Data
+Tan|Done|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Done: C:\ClientMonitoringSystem\Data
+Long|Login|localhost/127.0.0.1:1101 61123|2022-08-27 21:24|Long Đăng nhập
+Long|Scanning|localhost/127.0.0.1:1101 61123|2022-08-27 21:24|Scanning: C:\ClientMonitoringSystem\Data
+Long|Done|localhost/127.0.0.1:1101 61123|2022-08-27 21:24|Done: C:\ClientMonitoringSystem\Data
+Tan|Change Directory|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Đổi thư mục theo dõi: C:/ClientMonitoringSystem/Data/BT1
+Tan|Scanning|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Scanning: C:\ClientMonitoringSystem\Data\BT1
+Tan|Done|localhost/127.0.0.1:1101 61122|2022-08-27 21:24|Done: C:\ClientMonitoringSystem\Data\BT1
+Long|Change Directory|localhost/127.0.0.1:1101 61123|2022-08-27 21:25|Đổi thư mục theo dõi: C:/ClientMonitoringSystem/Data/BT2
+Long|Scanning|localhost/127.0.0.1:1101 61123|2022-08-27 21:25|Scanning: C:\ClientMonitoringSystem\Data\BT2
+Long|Done|localhost/127.0.0.1:1101 61123|2022-08-27 21:25|Done: C:\ClientMonitoringSystem\Data\BT2
+Tan|Create|localhost/127.0.0.1:1101 61122|2022-08-27 21:25|Tạo mới: C:\ClientMonitoringSystem\Data\BT1\New folder
+Tan|Register|localhost/127.0.0.1:1101 61122|2022-08-27 21:25|Register: C:\ClientMonitoringSystem\Data\BT1\New folder
+Tan|Delete|localhost/127.0.0.1:1101 61122|2022-08-27 21:25|Xóa: C:\ClientMonitoringSystem\Data\BT1\New folder
+Tan|Create|localhost/127.0.0.1:1101 61122|2022-08-27 21:25|Tạo mới: C:\ClientMonitoringSystem\Data\BT1\XYZ
+Tan|Update|localhost/127.0.0.1:1101 61122|2022-08-27 21:25|Update: C:\ClientMonitoringSystem\Data\BT1\New folder -> C:\ClientMonitoringSystem\Data\BT1\XYZ
+Tan|Modify|localhost/127.0.0.1:1101 61122|2022-08-27 21:26|Chỉnh sửa: C:\ClientMonitoringSystem\Data\BT1\New Text Document.txt
+Long|Delete|localhost/127.0.0.1:1101 61123|2022-08-27 21:26|Xóa: C:\ClientMonitoringSystem\Data\BT2\Tan
+Long|Logout|localhost/127.0.0.1:1101 61123|2022-08-27 21:27|Long Đăng Xuất
+Tan|Logout|localhost/127.0.0.1:1101 61122|2022-08-27 21:27|Tan Đăng Xuất
+Server|Stop|Port 1101|2022-08-27 21:27|Stop Server
