@@ -15,3 +15,5 @@ Tan Create localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Create C:\ClientMonit
 Tan Update localhost/127.0.0.1:1101 61122 2022-08-27 21:25 Update: C:\ClientMonitoringSystem\Data\BT1\New folder -> C:\ClientMonitoringSystem\Data\BT1\XYZ
 Tan Modify localhost/127.0.0.1:1101 61122 2022-08-27 21:26 Modify C:\ClientMonitoringSystem\Data\BT1\New Text Document.txt
 Long Delete localhost/127.0.0.1:1101 61123 2022-08-27 21:26 Delete C:\ClientMonitoringSystem\Data\BT2\Tan
+Tan Scanning localhost/127.0.0.1:1101 64811 2022-08-28 20:57 Scanning: C:\ClientMonitoringSystem\Data
+Tan Done localhost/127.0.0.1:1101 64811 2022-08-28 20:57 Done: C:\ClientMonitoringSystem\Data

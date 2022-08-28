@@ -31,3 +31,4 @@ Long|Delete|localhost/127.0.0.1:1101 61123|2022-08-27 21:26|Xóa: C:\ClientMonit
 Long|Logout|localhost/127.0.0.1:1101 61123|2022-08-27 21:27|Long Đăng Xuất
 Tan|Logout|localhost/127.0.0.1:1101 61122|2022-08-27 21:27|Tan Đăng Xuất
 Server|Stop|Port 1101|2022-08-27 21:27|Stop Server
+
