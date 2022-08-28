@@ -1,0 +1,56 @@
+JFDML JFormDesigner: "7.0.7.0.1134" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp lblInfo::::471:x, seq {par l {comp lblIP:::p:108:p, comp lblPort:::::x, comp lblName::t:::x}, space :::p, par l {comp txtIp::::357:x, comp txtPort::::357:x, comp txtName::::357:x}}}, space :::p}, seq t {space ::170:x, comp btnConnect:::p:144:p, space :p:169:p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp lblInfo:::p:30:p, space s:::p, par b {comp lblIP::b:p:30:p, comp txtIp::b:p::p}, space u:::p, par b {comp txtPort::b:p::p, comp lblPort::b:p:30:p}, space u:::p, par b {comp txtName::b:p::p, comp lblName::b:p:30:p}, space s:::p, comp btnConnect:::p::p, space ::22:x}}"
+		} ) {
+			name: "this"
+			"title": "Connection Port"
+			"resizable": false
+			"defaultCloseOperation": 3
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblIP"
+				"text": "IP"
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "txtIp"
+				"editable": false
+				"text": "localhost"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblPort"
+				"text": "Port"
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "txtPort"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblInfo"
+				"text": "Info IP/Port"
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnConnect"
+				"text": "Connect"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnConnectActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblName"
+				"text": "Username"
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "txtName"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 15, 5 )
+			"size": new java.awt.Dimension( 485, 310 )
+		} )
+	}
+}
